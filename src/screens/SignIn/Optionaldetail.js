@@ -15,6 +15,12 @@ const FirstRoute = () => {
     const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
+    useEffect(() => {
+        font.loadAsync({
+            'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
+            'Montserrat-ExtraLight': require('../../../assets/fonts/Montserrat-ExtraLight.ttf')
+        });
+    }, [])
 
 
     const [selectedValue, setSelectedValue] = useState("");
@@ -560,13 +566,12 @@ const FourthRoute = props => {
 
 const Optionaldetail = props => {
     useEffect(() => {
-        async function getKind() {
+
             font.loadAsync({
                 'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
                 'Montserrat-ExtraLight': require('../../../assets/fonts/Montserrat-ExtraLight.ttf')
             });
-        }
-        getKind()
+    
     }, [])
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([

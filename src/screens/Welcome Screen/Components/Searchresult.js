@@ -33,9 +33,6 @@ const SearchResult = props => {
             'Cairo-Bold': require('../../../../assets/fonts/Cairo-Bold.ttf'),
             'Montserrat-ExtraLight': require('../../../../assets/fonts/Montserrat-ExtraLight.ttf')
               });
-
-              console.log(props)
-
         getKind();
     }, []);
     return (

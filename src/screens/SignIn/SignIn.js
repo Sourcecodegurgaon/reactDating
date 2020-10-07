@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Text, StyleSheet, View } from "react-native";
 import Navigationbar from '../../Navigationbar';
 import { Button } from 'react-native-elements';
 import { Input } from 'react-native-elements';
 import Http from '../../Api/Http'
 import axios from 'axios';
+import * as font from 'expo-font';
 import APIKit, { setClientToken } from '../../Api/APIKit'
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -12,7 +13,12 @@ const SignIn = props => {
     const [user, setUser] = useState('')
     const [pass, setPass] = useState('')
     const [searchPostcode, setserachPostocde] = useState([])
-
+    useEffect(() => {
+        font.loadAsync({
+            'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
+            'Montserrat-ExtraLight': require('../../../assets/fonts/Montserrat-ExtraLight.ttf')
+        });
+    }, [])
 
     const Loginh = async () => {
         await fetch('https://gowebtutorial.com/api/json/user/login', {

@@ -28,7 +28,12 @@ const FirstRoute = () => {
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
     };
-
+    useEffect(() => {
+        font.loadAsync({
+            'Cairo-Bold': require('../../assets/fonts/Cairo-Bold.ttf'),
+            'Montserrat-ExtraLight': require('../../assets/fonts/Montserrat-ExtraLight.ttf')
+        });
+    }, [])
     const showMode = (currentMode) => {
         setShow(true);
         setMode(currentMode);

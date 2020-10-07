@@ -10,13 +10,13 @@ import * as font from 'expo-font';
 
 const Useroption = () => {
     useEffect(() => {
-        async function getKind() {
+
             font.loadAsync({
                 'Cairo-Bold': require('../../assets/fonts/Cairo-Bold.ttf'),
                 'Montserrat-ExtraLight': require('../../assets/fonts/Montserrat-ExtraLight.ttf')
             });
-        }
-        getKind()
+        
+
     }, [])
     return (
         <View style={styles.mainContainer}>
