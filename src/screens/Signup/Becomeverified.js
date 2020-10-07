@@ -91,22 +91,22 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'Montserrat-ExtraLight'
     },
-    alignTextContainerButton:{
+    alignTextContainerButton: {
         textAlign: "center",
         fontSize: 18,
         fontFamily: 'Montserrat-ExtraLight',
     },
-    alignTextContainerTwo:{
+    alignTextContainerTwo: {
         textAlign: "center",
         fontSize: 18,
         fontFamily: 'Montserrat-ExtraLight',
-        marginTop:25
+        marginTop: 25
     },
-    alignTextContainerthree:{
+    alignTextContainerthree: {
         textAlign: "center",
         fontSize: 18,
         fontFamily: 'Montserrat-ExtraLight',
-        marginTop:40
+        marginTop: 40
     }
 })
 export default Becomeverified

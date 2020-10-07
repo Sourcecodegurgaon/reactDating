@@ -1,23 +1,22 @@
 import React ,{useEffect ,useState} from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View ,SafeAreaView, ScrollView } from "react-native";
 import Navigationbar from '../../Navigationbar';
 import { Button } from 'react-native-elements';
 import * as font from 'expo-font';
 import { AppLoading } from 'expo';
-import { startAsync } from "expo/build/AR";
+import  useFonts  from 'expo-font';
+
 
 const HomeScreen = props => {
 
   useEffect(() => {
     font.loadAsync({
-        'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
-        'Montserrat-ExtraLight': require('../../../assets/fonts/Montserrat-ExtraLight.ttf')
-          });
-      },[])
+      'Cairo-Bold':{uri: require('../../../assets/fonts/Cairo-Bold.ttf')},
+        });
+      
+      }, [])
 
-
- 
-
+    
   return (
 
  
@@ -39,16 +38,16 @@ kindly save your energy and use another app.</Text>
 
         <Button 
         onPress ={() => props.navigation.navigate('Postcode')}
-          containerStyle={{ marginHorizontal: 15, marginVertical: 15, height:50,   fontFamily:"roboto-bold" ,borderRadius:10 }}
-          buttonStyle = {{height:50,   fontFamily:"roboto-bold" }}
+          containerStyle={{ marginHorizontal: 15, marginVertical: 15, height:50 ,borderRadius:10 }}
+          buttonStyle = {{height:50}}
           title="Sounds Cool! Who can I meet"
-          titleStyle={{fontFamily:'Cairo-Bold',fontSize:20}}
+          titleStyle={{fontSize:20}}
         />
         <Button 
         onPress ={() => props.navigation.navigate('SignUp')}
           buttonStyle={{ backgroundColor: "green",textAlign:"center",height:50,borderRadius:10  }}
               containerStyle={{ marginHorizontal: 15, marginVertical: 15}}
-              titleStyle={{fontFamily:'Cairo-Bold',fontSize:20}}
+              titleStyle={{fontSize:20}}
           title="Awesome! Sign me up!"
         />
 
@@ -57,7 +56,7 @@ kindly save your energy and use another app.</Text>
     </View>
 
   )
-
+  
 };
 
 const styles = StyleSheet.create({
@@ -65,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginVertical: 10,
     marginHorizontal: 15,
-    fontFamily: 'Montserrat-ExtraLight'
+
 
     
 
@@ -74,7 +73,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 15,
     fontSize: 19,
-    fontFamily: 'Montserrat-ExtraLight'
 
 
   },
@@ -84,7 +82,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "green",
     fontSize: 20,
-    fontFamily:'Cairo-Bold'
+   
 
   },
   mainTextContainer: {
@@ -97,6 +95,7 @@ const styles = StyleSheet.create({
     flex: 2
   }
 });
+
 
 export default HomeScreen;
 

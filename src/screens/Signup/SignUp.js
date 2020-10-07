@@ -18,12 +18,7 @@ const FirstRoute = () => {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
 
-    useEffect(() => {
-        font.loadAsync({
-            'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
-            'Montserrat-ExtraLight': require('../../../assets/fonts/Montserrat-ExtraLight.ttf')
-        });
-    }, [])
+
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
@@ -599,7 +594,15 @@ const FifthRoute = props => {
 //Export Upper Content
 
 const SignUp = props => {
-
+    useEffect(() => {
+        async function getKind() {
+        font.loadAsync({
+            'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
+            'Montserrat-ExtraLight': require('../../../assets/fonts/Montserrat-ExtraLight.ttf')
+        });
+    }
+    getKind()
+    }, [])
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
         { key: 'first', },

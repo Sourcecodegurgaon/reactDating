@@ -1,5 +1,5 @@
 
-import { Text, StyleSheet, View, Picker ,FlatList } from "react-native";
+import { Text, StyleSheet, View, Picker ,FlatList , TextInput} from "react-native";
 import Navigationbar from '../../../Navigationbar';
 import { Button } from 'react-native-elements';
 import { Input } from 'react-native-elements';
@@ -9,7 +9,11 @@ import Http from '../../../Api/Http'
 import { AppLoading } from 'expo';
 import { startAsync } from "expo/build/AR";
 import * as font from 'expo-font';
+import { Linking } from 'react-native'
+
 const Searchpostcode = props => {
+
+ 
     //OverLay 
     const [visible, setVisible] = useState(true);
     const [selectedValue, setSelectedValue] = useState("");
@@ -34,19 +38,19 @@ const Searchpostcode = props => {
         //Html
         <View style={styles.MainBackground}>
       <View  style={styles.SecondMainBackground}>
-            <Text style={styles.upperText}>Oops! Looks like we have not yet expanded to your area. Click here to suggest that we come to you next!
-       Click here to suggest that we come to you next</Text>
+            <Text style={styles.upperText}>Oops! Looks like we have not yet expanded to your area. 
+       <Text onPress={() => Linking.openURL('mailto:contactus@not4dating.com') }>Click here </Text>to suggest that we come to you next</Text>
 
 
-            <Text style={styles.lowerText}>Find Friends</Text>
-            <View style={{ marginHorizontal: 5}}>
-                <Input placeholder='Postcode' value={term} onChangeText={newValue => setTerm(newValue)} style={{borderWidth:1,paddingHorizontal:8}}/>
+        
+            <View style={{ marginHorizontal: 15,marginVertical:10}}>
+            <TextInput placeholder='Postcode' value={term} onChangeText={newValue => setTerm(newValue)} style={{borderWidth:1,paddingHorizontal:8,height:40}}/>
             </View>
 
             <View style={styles.container}>
                 <Picker
                     selectedValue={selectedValue}
-                    style={{ height: 50, width: "90%" , borderWidth:1, borderColor:"black"}}
+                    style={{ height: 40, width: "100%" , borderWidth:1, borderColor:"black"}}
                     value={selectedValue}
                     onValueChange={itemValue => setSelectedValue(itemValue)}>
                     <Picker.Item label="Australia" value="au" />
@@ -57,7 +61,11 @@ const Searchpostcode = props => {
                     <Picker.Item label="United Kingdom" value="uk" />
                     <Picker.Item label="United States" value="us" />
                 </Picker>
+
+
             </View>
+            <Text style={styles.upperText}>Don’t see your country?<Text onPress={() => Linking.openURL('mailto:contactus@not4dating.com') }> Click here</Text> to tell us where to expand next.</Text>
+
             <Button containerStyle={{ marginHorizontal: 30, marginVertical: 30 }}
              titleStyle={{fontFamily:'Cairo-Bold',fontSize:20}}
              underlineColor="transparent"
@@ -121,6 +129,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderWidth: 1,
         marginHorizontal: 15,
+        marginVertical:20
     },
   
 });

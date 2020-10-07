@@ -1,40 +1,105 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, View } from "react-native";
 import Navigationbar from '../../Navigationbar';
 import { Button } from 'react-native-elements';
 import { Input } from 'react-native-elements';
 import Http from '../../Api/Http'
-import { useState } from "react";
 import axios from 'axios';
+import APIKit, { setClientToken } from '../../Api/APIKit'
+import Spinner from 'react-native-loading-spinner-overlay';
 
-const SignIn = () => {
+const SignIn = props => {
     const [user, setUser] = useState('')
     const [pass, setPass] = useState('')
+    const [searchPostcode, setserachPostocde] = useState([])
 
 
-    const Login = async () => {
-        fetch('https://gowebtutorial.com/api/json/user/login', {
-            method: 'post',
+    const Loginh = async () => {
+        await fetch('https://gowebtutorial.com/api/json/user/login', {
+            method: 'POST',
             headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                "X-CSRF-Token": ""
             },
-            body: JSON.stringify({
-                "username": user, "password": pass
-            })
+            body: JSON.stringify({ username: user, password: pass })
         }).then((response) => response.json())
-            .then((res) => {
-                if (typeof (res.message) != "undefined") {
-                    alert("Error", "Error: " + res.message);
+            .then(async (response) => {
+                console.log("LoggedIN" + "  " + response)
+            })
+
+    }
+
+
+
+    const LoginNew = () => {
+        //axios.post('http://127.0.0.1:8000/api/login', payload) .then((response) => {}
+        console.log("1. Hello before axios.post" + user + pass);
+        //axios.post('http://127.0.0.1:8000/api/login', payload)
+        axios.post('https://gowebtutorial.com/api/json/user/login', { username: user, password: pass })
+            .then((response) => {
+                console.log("New User" + response.data);
+                console.log("2. Inside axios response");
+
+                if (response.data.code == 200) {
+                    //Set localstorage:
+                    // const userDetails = { username: "RitinN" }
+                    // localStorage.setItem('userDetails', JSON.stringify(userDetails));
+                    console.log("Login successfull");
+                    return
+
+                }
+                else if (response.data.code == 204) {
+                    console.log("Username password do not match");
+                    alert(response.data.success)
+                }
+                else if (response.data.code == 401) {
+                    console.log("New User" + response);
+                    alert(response.data.success)
+                    console.log(response.data);
+
                 }
                 else {
-                    console.log(res)
-                    alert("Welcome" + " You have succesfully logged in");
+                    console.log("Username does not exists");
+                    alert("Username does not exist");
                 }
-            }).catch((error) => {
-                console.error(error);
+            })
+            .catch(function (error) {
+
+                console.log("The error is : " + error);
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
             });
+
+
+
     }
+
+
+
+    const logOut = async () => {
+        console.log("Hello" + searchPostcode)
+        const responses = await fetch('https://gowebtutorial.com/api/json/user/logout', {}, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': "jm0vVJd2zaWV1n4McIuQYur7GflKlpmf0YKvIr8SVc8" }
+        }).then((responses) => responses.json()).then((responses) => {
+            console.log(responses)
+        })
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -45,16 +110,20 @@ const SignIn = () => {
 
             <View style={styles.secondMainCotainer}>
 
+            <Text style={styles.TextContainer}>Login with Username</Text>
 
                 <Input placeholder='Username' value={user} onChangeText={newValue => setUser(newValue)} style={{ borderWidth: 1, paddingHorizontal: 8, marginTop: 4 }} />
                 <Input placeholder="Password" value={pass} onChangeText={newValues => setPass(newValues)} style={{ borderWidth: 1, paddingHorizontal: 8, marginTop: 4 }} />
-
+                <Text style={styles.forgotPasswprdText} onPress ={() => props.navigation.navigate('Forgotpassword')}>Forgot password ?</Text>
 
                 <View >
-                    <Button title="Sign In" onPress={Login}
+                    <Button title="Sign In" onPress={Loginh}
                         buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, height: 50, fontFamily: 'Cairo-Bold' }}
                         titleStyle={{ fontFamily: 'Cairo-Bold', fontSize: 20 }}
-                        containerStyle={{width:"100%"}} />
+                        containerStyle={{ width: "100%" }} />
+
+
+
                 </View>
 
             </View>
@@ -77,12 +146,21 @@ const styles = StyleSheet.create({
         flex: 2,
         backgroundColor: "white",
         justifyContent: "center",
-        
+
     },
     forgotPass: {
 
         justifyContent: "flex-end",
         alignItems: "flex-end"
+    },
+    forgotPasswprdText:{
+        textAlign:"right",
+        marginHorizontal:20,fontSize:15,fontFamily: 'Cairo-Bold'
+    },
+    TextContainer:{
+        textAlign:"center",
+        fontFamily:"Cairo-Bold",
+        fontSize:20
     }
 
 
