@@ -1,5 +1,4 @@
 import { Text, StyleSheet, View, Picker ,FlatList } from "react-native";
-import Navigationbar from '../../../Navigationbar';
 import { Button } from 'react-native-elements';
 import { Input } from 'react-native-elements';
 import React, { useState, Component ,useEffect} from 'react';

@@ -1,5 +1,5 @@
 import { Text, StyleSheet, View, Picker, FlatList ,TouchableOpacity} from "react-native";
-import Navigationbar from '../../../Navigationbar';
+
 import { Button } from 'react-native-elements';
 import { Input } from 'react-native-elements';
 import React, { useState, Component, useEffect } from 'react';
@@ -10,12 +10,12 @@ import * as font from 'expo-font';
 
 const SearchResult = props => {
     const { navigation } = props;
-    console.log(props.navigation.navigate)
     const post = navigation.getParam('term')
     const [searchPostcode, setserachPostocde] = useState([])
     const country = navigation.getParam('selectedValue')
     const [visible, setVisible] = useState(false);
 
+    console.log(post + country)
     const toggleOverlay = () => {
       setVisible(!visible);
     };
@@ -38,7 +38,7 @@ const SearchResult = props => {
     return (
     
         <View style={{flex:1,backgroundColor:"white"}}>
-            <Navigationbar />
+            
             <UserResult searchPostcode={searchPostcode} tittle="Members near you"   /> 
         </View>
 

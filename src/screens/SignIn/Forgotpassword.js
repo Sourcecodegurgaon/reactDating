@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, Dimensions, Picker, SafeAreaView, ScrollView, Image, Platform ,TextInput} from "react-native";
-import Navigationbar from '../../Navigationbar';
 import { Button } from 'react-native-elements';
 import { Tooltip, Input } from 'react-native-elements';
 import * as font from 'expo-font';
@@ -18,7 +17,7 @@ const Forgotpassword = () => {
     return (
 
         <View style={styles.mainContainer} >
-            <Navigationbar />
+
 
             <View style={styles.secondmainContainer}>
                 <Text style={styles.TextContainer}>Reset with Email or Username</Text>

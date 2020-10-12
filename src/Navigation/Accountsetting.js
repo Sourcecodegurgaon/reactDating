@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Text, StyleSheet, Image, View, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
 import { Button, Overlay } from 'react-native-elements';
-import Navigationbar from '../Navigationbar';
 import { Tooltip, Input } from 'react-native-elements';
 import { CheckBox } from 'react-native-elements'
 import * as font from 'expo-font';
 
 
 
-const AccountSetting = () => {
+const AccountSetting = props => {
     useEffect(() => {
         async function getKind() {
             font.loadAsync({
@@ -20,7 +19,6 @@ const AccountSetting = () => {
     }, [])
     return (
         <View style={styles.mainContainer}>
-            <Navigationbar />
             <SafeAreaView style={styles.secondMainCotainer}>
                 <TouchableOpacity style={styles.imageContainer}>
                     <Image style={styles.Image} source={require('../../assets/Images/cross.png')} />

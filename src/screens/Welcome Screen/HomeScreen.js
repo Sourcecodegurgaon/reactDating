@@ -1,10 +1,10 @@
 import React ,{useEffect ,useState} from "react";
 import { Text, StyleSheet, View ,SafeAreaView, ScrollView } from "react-native";
-import Navigationbar from '../../Navigationbar';
+
 import { Button } from 'react-native-elements';
 import * as font from 'expo-font';
-import { AppLoading } from 'expo';
-import  useFonts  from 'expo-font';
+import { AsyncStorage } from 'react-native';
+
 
 
 const HomeScreen = props => {
@@ -13,7 +13,13 @@ const HomeScreen = props => {
     font.loadAsync({
       'Cairo-Bold':{uri: require('../../../assets/fonts/Cairo-Bold.ttf')},
         });
-      
+        AsyncStorage.getItem('Token', (err, result) => {
+          const LogoutToken = JSON.parse(result)
+          if(LogoutToken != null)
+          {
+            props.navigation.navigate('FindFriends')
+          }
+        })
       }, [])
 
     
@@ -22,7 +28,7 @@ const HomeScreen = props => {
  
     <View style={styles.mainTextContainer}>
 
-      <Navigationbar />
+
 
       <View style={styles.mainTextContainerTwo}>
         <Text style={styles.text}>Welcome!</Text>

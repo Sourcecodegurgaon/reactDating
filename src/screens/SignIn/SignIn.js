@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View } from "react-native";
-import Navigationbar from '../../Navigationbar';
 import { Button } from 'react-native-elements';
 import { Input } from 'react-native-elements';
 import Http from '../../Api/Http'
@@ -24,34 +23,51 @@ const SignIn = props => {
             'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
             'Montserrat-ExtraLight': require('../../../assets/fonts/Montserrat-ExtraLight.ttf')
         });
+        AsyncStorage.getItem('Token', (err, result) => {
+            const LogoutToken = JSON.parse(result)
+            if(LogoutToken != null)
+            {
+              props.navigation.navigate('FindFriends')
+            }
+          })
     }, [])
 
-
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+      }, []);
 
 
 
     const Login = () => {
         setspinner(true)
             //Login User Api
-            axios.post('https://gowebtutorial.com/api/json/user/login', { username: "gagarhymes", password: "qvwnhc294" }, {
+            axios.post('https://gowebtutorial.com/api/json/user/login', { username: user, password: pass }, {
                 headers: {'Accept': 'application/json','Content-Type': 'application/json'}
-               }).then((response) => {console.log("New User" + response);
+               }).then((response) => {
+                setspinner(false) 
                AsyncStorage.setItem('Token',JSON.stringify(response))
                AsyncStorage.getItem('Token', (err, result) => {
                 const LogoutToken = JSON.parse(result)
-                 
+               
                 //Connect Api
                 axios.post('http://gowebtutorial.com/api/json/system/connect', {}, {
                     headers: {'Accept': 'application/json','Content-Type': 'application/json','X-Cookie' : LogoutToken.data.sessid + "=" + LogoutToken.data.session_name ,'X-CSRF-Token' :LogoutToken.data.token}
                    }).then((response)=>{
+                   
                     AsyncStorage.setItem('Connected',JSON.stringify(response))
-                        setspinner(false)        
+           
+                        props.navigation.navigate('FindFriends')
                    })
+
               });
-            }).catch(function (error) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
+            }).catch(function (error) {    
+           
+                    alert(error.response.data);
+        
+                
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
             });
 
   
@@ -62,7 +78,6 @@ const SignIn = props => {
 
     return (
         <View style={styles.mainContainer}>
-            <Navigationbar />
             <Spinner
           visible={spinner}
           textContent={'Signing...'}
@@ -79,7 +94,7 @@ const SignIn = props => {
 
                 <View >
                     <Button title="Sign In" onPress={Login}
-                        buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, height: 50, fontFamily: 'Cairo-Bold' }}
+                        buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10,  fontFamily: 'Cairo-Bold' }}
                         titleStyle={{ fontFamily: 'Cairo-Bold', fontSize: 20 }}
                         containerStyle={{ width: "100%" }} />
                 </View>

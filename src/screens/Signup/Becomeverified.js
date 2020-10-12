@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, Dimensions, Picker, SafeAreaView, ScrollView, Image, Platform } from "react-native";
-import Navigationbar from '../../Navigationbar';
+
 import { Button } from 'react-native-elements';
 import { Tooltip, Input } from 'react-native-elements';
 import * as font from 'expo-font';
@@ -19,7 +19,7 @@ const Becomeverified = () => {
     return (
 
         <View style={{ flex: 1 }}>
-            <Navigationbar />
+     
             <View style={styles.secondContainer}>
 
                 <Text style={styles.alignTextContainer}>

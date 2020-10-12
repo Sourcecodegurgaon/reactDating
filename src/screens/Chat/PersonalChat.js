@@ -8,7 +8,7 @@ import {
     TextInput,
     SafeAreaView, ScrollView,
 } from "react-native";
-import Navigationbar from '../../Navigationbar';
+import Navigationbar from '../Navigationbar';
 import { Button } from 'react-native-elements';
 import { Tooltip, Input } from 'react-native-elements';
 import * as font from 'expo-font';

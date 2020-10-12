@@ -3,7 +3,7 @@ import React, { useState, Component, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
 import * as font from 'expo-font';
-import NavigationBar from '../../Navigationbar'
+
 
 
 
@@ -14,12 +14,17 @@ const SearchItems = () => {
             'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
             'Montserrat-ExtraLight': require('../../../assets/fonts/Montserrat-ExtraLight.ttf')
         });
+
+
+
+
+
+
     }, [])
 
 
     return (
         <View style={styles.mainContainer}>
-            <NavigationBar />
            <View style={styles.secondContainer}>
               
             <SafeAreaView style={{flex:1,backgroundColor:"white"}}>
@@ -31,7 +36,6 @@ const SearchItems = () => {
                                     style={styles.tinyLogo}    
                                     source={require('../../../assets/Images/p1.jpg')}
                                     style={{ width: 150, height: 130 }}
-                               
                                 />
                             </View>
                             <View style={styles.textContainer}>

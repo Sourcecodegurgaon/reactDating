@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, Dimensions, Picker, SafeAreaView, ScrollView, Image, Platform } from "react-native";
-import Navigationbar from '../../Navigationbar';
 import { Button } from 'react-native-elements';
 import { Tooltip, Input } from 'react-native-elements';
 import * as font from 'expo-font';
@@ -19,7 +18,7 @@ const Tophobbies = () => {
 
     return (
         <View style={styles.mainContainer}>
-            <Navigationbar />
+
             <View style={styles.secondContainer}>
                 <View>
                     <Text style={styles.upperText}> Hello! Would you like to add your hobbies and interests to your profile to improve your results?</Text>

@@ -3,7 +3,7 @@ import React, { useState, Component, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
 import * as font from 'expo-font';
-import NavigationBar from '../../Navigationbar'
+
 
 
 
@@ -19,7 +19,7 @@ const Chats = () => {
 
     return (
         <View style={styles.mainContainer}>
-            <NavigationBar />
+         
            <View style={styles.secondContainer}>
               
             <SafeAreaView style={{flex:1,backgroundColor:"white"}}>

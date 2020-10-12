@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Text, StyleSheet, Image, View, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView,RefreshControl ,ActivityIndicator} from "react-native";
 import { Button, Overlay } from 'react-native-elements';
-import { StackNavigator } from 'react-navigation';
-import { useNavigation } from '@react-navigation/native';
 import { AsyncStorage } from 'react-native';
 import axios from 'axios';
 import Spinner from 'react-native-loading-spinner-overlay';
-import AccountSetting from '../Navigation/Accountsetting' 
 
 
-const HelpImage = ({ navigation, Postcode }) => {
+
+const HelpImage = (props) => {
 const [refreshing, setRefreshing] = useState(true);
 const [visible, setVisible] = useState(false);
-const [spinner ,setspinner] = useState(false);
+const [spinner ,setspinner] = useState(false); 
 const [Login, setLogin] = useState(false)
+
     const toggleOverlay = () => {
         setVisible(!visible);
     };
@@ -31,8 +30,6 @@ const [Login, setLogin] = useState(false)
     useEffect(() => {
         AsyncStorage.getItem('Token', (err, result) => {
             const UserDetail = JSON.parse(result)
-            const LogoutToken = JSON.parse(result)
-            console.log(LogoutToken)
             if (UserDetail != null) {
                 setLogin(true)
             }
@@ -43,6 +40,7 @@ const [Login, setLogin] = useState(false)
 
         })
     })
+    
 
     const LogOut = () => {
         setspinner(true)
@@ -56,7 +54,6 @@ const [Login, setLogin] = useState(false)
             onRefresh()
             AsyncStorage.clear();
              setspinner(false)
-
         }).catch(function (error) {
             setspinner(false)
             console.log(error.response.data);
@@ -66,7 +63,6 @@ const [Login, setLogin] = useState(false)
 
     })
     }
-
 
 
     return (
@@ -84,7 +80,7 @@ const [Login, setLogin] = useState(false)
             <Image style={styles.Image} source={require('../../assets/Images/question.png')} />
             <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
                 <View style={styles.overlaystyling}>
-                    <Button title="View/Edit Profile" buttonStyle={styles.buttonHeight} titleStyle={styles.titleStyles} />
+                    <Button title="View/Edit Profile" buttonStyle={styles.buttonHeight} titleStyle={styles.titleStyles} onPress={() => props.navigation.navigate('UserDetail')} />
                     <Button title="Account Settings" buttonStyle={styles.buttonHeight} titleStyle={styles.titleStyles} />
                     <Button title="Blocked Users" buttonStyle={styles.buttonHeight} titleStyle={styles.titleStyles} />
                     <Text style={styles.titleStyles} onPress={LogOut}>Log Out</Text>
@@ -135,4 +131,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default HelpImage
+export default HelpImage;

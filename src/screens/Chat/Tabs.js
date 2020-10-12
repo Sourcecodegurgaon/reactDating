@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import NavigationBar from '../../Navigationbar'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SearchField  from './SerachField'
@@ -16,9 +15,7 @@ function HomeScreen() {
 
 function SettingsScreen() {
   return (
- 
     <SearchField />
-
   );
 }
 
@@ -39,7 +36,6 @@ function MyTabs() {
     <Tab.Navigator    screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-
           if (route.name === 'Chat') {
             iconName = focused ? 'ios-chatbubbles' : 'ios-chatbubbles';
           } else if (route.name === 'Favorate') {

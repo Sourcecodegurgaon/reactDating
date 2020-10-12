@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Text, StyleSheet, Image, View, TouchableHighlight, TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
 import { Button, Overlay } from 'react-native-elements';
-import Navigationbar from '../Navigationbar';
 import { Tooltip, Input } from 'react-native-elements';
 import { CheckBox } from 'react-native-elements'
 import * as font from 'expo-font';
+import { AsyncStorage } from 'react-native';
 
 
 
 const Moreinfo = props => {
+
+    const [userName, setuserName] = useState();
+    const [userLastName, setuserLastName] = useState();
+    const [userMail, setuserMail] = useState();
+    const [userActivity, setuserActivity] = useState();
+    const [userActivityShow, setuserActivityShow] = useState();
+    const [Picture, setuserPicture] = useState();
+    const [name, setName] = useState();
+
     useEffect(() => {
         async function getKind() {
             font.loadAsync({
@@ -16,55 +25,65 @@ const Moreinfo = props => {
                 'Montserrat-ExtraLight': require('../../assets/fonts/Montserrat-ExtraLight.ttf')
             });
         }
+
+        AsyncStorage.getItem('Token', (err, result) => {
+            const UserDetail = JSON.parse(result)
+            setuserName(UserDetail.data.user.field_first_name.und[0].value),
+                setuserLastName(UserDetail.data.user.field_last_name.und[0].value),
+                setuserMail(UserDetail.data.user.mail)
+            setuserPicture(UserDetail.data.user.picture.url)
+            setName(UserDetail.data.user.name)
+         setuserActivity(UserDetail.data.user.field_activities_interests.und[0].value)
+
+        })
         getKind()
     }, [])
     return (
 
 
-        <View style={styles.mainContainer}>
-            <Navigationbar />
-            <SafeAreaView style={styles.secondMainCotainer}>
-                <ScrollView >
-                    <View style={{justifyContent:"center"}}>
-                    <View style={styles.topImage}>
-                        <Image style={styles.LeftImage} source={require('../../assets/Images/p1.jpg')} />
-                        <Text style={styles.rightText}>RitinN</Text>
-                    </View>
-                    <View style={styles.thirdContainer}>
-                        <View>
-                            <Text style={styles.upperHeading}>FullName</Text>
-                            <Text style={styles.upperHeadingOutput}>Ritin Nijhawan</Text>
+        <View style={{ flex: 1 }}>
+            <View style={styles.mainContainer}>
+                <View style={styles.secondMainCotainer}>
+                    <View >
+                        <View style={styles.topImage}>
+                            <Image style={styles.LeftImage}
+                                source={{
+                                    uri: Picture,
+                                }} />
+                            <Text style={styles.rightText}>{name}</Text>
                         </View>
+                        <View style={styles.thirdContainer}>
+                            <View>
+                                <Text style={styles.upperHeading}>FullName</Text>
+                                <Text style={styles.upperHeadingOutput}>{userName} {userLastName}</Text>
+                            </View>
 
-                        <View>
-                            <Text style={styles.upperHeading}>Email</Text>
-                            <Text style={styles.upperHeadingOutput}>Ritin.Nijhawan@gmail.com</Text>
+                            <View>
+                                <Text style={styles.upperHeading}>Email</Text>
+                                <Text style={styles.upperHeadingOutput}>{userMail}</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.upperHeading}>Activities:</Text>
+                                <Text style={styles.upperHeadingOutput}>{userActivity}</Text>
+                            </View>
+
+
+
+
+
+
+                            <Button containerStyle={{ marginHorizontal: 20, marginVertical: 15 }}
+                                onPress={() => props.navigation.navigate('Editprofile')}
+                                title="Add More Info"
+                                buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10,  fontFamily: 'Cairo-Bold' }}
+                                titleStyle={{ fontFamily: 'Cairo-Bold', fontSize: 20 }}/>
                         </View>
-                        <View>
-                            <Text style={styles.upperHeading}>Activities:</Text>
-                            <Text style={styles.upperHeadingOutput}>Yoda,dance</Text>
-                        </View>
-
-
-
-
-
-
-                        <Button containerStyle={{ marginHorizontal: 20, marginVertical: 15 }}
-                            onPress ={() => props.navigation.navigate('Editprofile')}
-                            title="Add More Info"
-                            buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, height: 50, fontFamily: 'Cairo-Bold' }}
-                            titleStyle={{ fontFamily: 'Cairo-Bold', fontSize: 20 }}
-
-                        />
-                    </View>
                     </View>
 
-                </ScrollView>
-            </SafeAreaView>
 
+                </View>
 
-
+            </View>
         </View>
     )
 
@@ -75,16 +94,20 @@ const Moreinfo = props => {
 const styles = StyleSheet.create({
 
     mainContainer: {
-        flex: 1, backgroundColor: "#08080885"
+        flex: 2, backgroundColor: "#08080885",
+        justifyContent: "center",
+
+
     },
     secondMainCotainer:
     {
+      
         backgroundColor: "white",
-        marginHorizontal: 30,
-        marginVertical: 30,
-        paddingVertical: 20,
-        justifyContent:"center"
-     
+        marginHorizontal: 20,
+        marginVertical: 20,
+        justifyContent:"center",
+        paddingVertical:20
+       
     },
     forgotPass: {
 
@@ -126,7 +149,6 @@ const styles = StyleSheet.create({
     },
     topImage: {
         flexDirection: "row",
-        flex: 1,
         alignItems: "center"
     },
     LeftImage: {
@@ -137,7 +159,7 @@ const styles = StyleSheet.create({
     },
     rightText: {
         justifyContent: "center",
-
+        fontFamily: 'Montserrat-ExtraLight',
     }
 
 

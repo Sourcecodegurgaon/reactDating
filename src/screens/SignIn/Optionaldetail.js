@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, Dimensions, Picker, SafeAreaView, ScrollView, Image, Platform, TextInput } from "react-native";
-import Navigationbar from '../../Navigationbar';
+
 import { Button } from 'react-native-elements';
 import { Tooltip, Input } from 'react-native-elements';
 import { TabView, SceneMap } from 'react-native-tab-view';
@@ -591,7 +591,6 @@ const Optionaldetail = props => {
 
     return (
         <View style={{ flex: 1 }}>
-            <Navigationbar />
             <TabView
 
                 style={{ backgroundColor: "white" }}
