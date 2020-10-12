@@ -9,14 +9,19 @@ import { Ionicons } from '@expo/vector-icons';
 
 
 
-const UserDetail = props => {
+const UserDetails = props => {
     useEffect(() => {
 
             font.loadAsync({
                 'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
                 'Montserrat-ExtraLight': require('../../../assets/fonts/Montserrat-ExtraLight.ttf')
             });
-   
+
+
+
+
+
+            
     }, [])
     return (
         <View style={styles.mainContainer}>
@@ -184,4 +189,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default UserDetail
+export default UserDetails

@@ -14,6 +14,12 @@ const UserResult = props => {
             'Cairo-Bold': require('../../../../assets/fonts/Cairo-Bold.ttf'),
             'Montserrat-ExtraLight': require('../../../../assets/fonts/Montserrat-ExtraLight.ttf')
         });
+
+
+
+        
+
+
     }, []);
     const [visible, setVisible] = useState(false);
     const toggleOverlay = () => {

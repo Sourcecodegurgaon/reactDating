@@ -1,14 +1,13 @@
-import { Text, StyleSheet, View, Picker, FlatList , SafeAreaView, ScrollView} from "react-native";
+import { Text, StyleSheet, View, Picker, FlatList, SafeAreaView, ScrollView ,TouchableOpacity} from "react-native";
 import React, { useState, Component, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
 import * as font from 'expo-font';
 
+const SearchItems = ({navigation,searchResults}) => {
+ 
 
 
-
-
-const SearchItems = () => {
     useEffect(() => {
         font.loadAsync({
             'Cairo-Bold': require('../../../assets/fonts/Cairo-Bold.ttf'),
@@ -16,82 +15,46 @@ const SearchItems = () => {
         });
 
 
+      
+  
 
-
-
-
-    }, [])
+  }, [])
 
 
     return (
         <View style={styles.mainContainer}>
-           <View style={styles.secondContainer}>
-              
-            <SafeAreaView style={{flex:1,backgroundColor:"white"}}>
-                        <ScrollView style={styles.scrollView}>
-                        <View style={styles.mainContainerOutput}>
-                            <View style={styles.Image}>
 
-                                <Image
-                                    style={styles.tinyLogo}    
-                                    source={require('../../../assets/Images/p1.jpg')}
-                                    style={{ width: 150, height: 130 }}
-                                />
-                            </View>
-                            <View style={styles.textContainer}>
-                                <Text style={{fontFamily:'Montserrat-ExtraLight'}}>Ritin</Text>
-                                <Text style={{fontFamily:'Montserrat-ExtraLight',color:'black',fontSize:15}}><Text style={{fontFamily:'Cairo-Bold'}}>Activity :</Text>dance,yoga, </Text>
-                            </View>
-                    
+            <FlatList
+                data={searchResults}
+                keyExtractor={item => item.uid}
+                renderItem={({ item }) => {
+                    return (
+                     <TouchableOpacity  onPress={()=>navigation.navigate('UserDetails')}>
+                        <View style={styles.secondContainer}>
+                            <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+                                <ScrollView style={styles.scrollView}>
+                                    <View style={styles.mainContainerOutput}>
+                                        <View style={styles.Image}>
+                                            <Image
+                                                style={styles.tinyLogo}
+                                                source={{ uri: item.Picture[0] }}
+                                                style={{ width: 100, height: 100 }}
+                                            />
+                                        </View>
+                                        <View style={styles.textContainer}>
+                                            <Text style={{ fontFamily: 'Montserrat-ExtraLight' }}>{item.name}</Text>
+                                            <Text style={{ fontFamily: 'Montserrat-ExtraLight', color: 'black', fontSize: 15 }}><Text style={{ fontFamily: 'Cairo-Bold' }}>Activity :</Text>{item.Activities}</Text>
+                                        </View>
+                                    </View>
+                                </ScrollView>
+                            </SafeAreaView>
                         </View>
+                        </TouchableOpacity>
 
-                        <View style={styles.mainContainerOutput}>
-                            <View style={styles.Image}>
+                    )
 
-                                <Image
-                                    style={styles.tinyLogo}    
-                                    source={require('../../../assets/Images/p1.jpg')}
-                                    style={{ width: 150, height: 130 }}
-                               
-                                />
-                            </View>
-                            <View style={styles.textContainer}>
-                                <Text style={{fontFamily:'Montserrat-ExtraLight'}}>Ritin</Text>
-                                <Text style={{fontFamily:'Montserrat-ExtraLight',color:'black',fontSize:15}}><Text style={{fontFamily:'Cairo-Bold'}}>Activity :</Text>dance,yoga, </Text>
-                            </View>
-                    
-                        </View>
-
-                        <View style={styles.mainContainerOutput}>
-                            <View style={styles.Image}>
-
-                                <Image
-                                    style={styles.tinyLogo}    
-                                    source={require('../../../assets/Images/p1.jpg')}
-                                    style={{ width: 150, height: 130 }}
-                               
-                                />
-                            </View>
-                            <View style={styles.textContainer}>
-                                <Text style={{fontFamily:'Montserrat-ExtraLight'}}>Ritin</Text>
-                                <Text style={{fontFamily:'Montserrat-ExtraLight',color:'black',fontSize:15}}><Text style={{fontFamily:'Cairo-Bold'}}>Activity :</Text>dance,yoga, </Text>
-                            </View>
-                    
-                        </View>
-                        </ScrollView>
-                    </SafeAreaView>
-
-                  
-
-      
-            
-
-
-
-
-
-            </View>
-
+                }}
+            />
         </View>
 
 
@@ -102,39 +65,41 @@ const SearchItems = () => {
 }
 const styles = StyleSheet.create({
     mainContainer: {
-    backgroundColor:'white',
-    flex:1
+        backgroundColor: 'white',
+        flex: 1
     },
-  
-  
-    container:{
-       
-        marginBottom:10,
-        backgroundColor:"white"
+
+
+    container: {
+
+        marginBottom: 10,
+        backgroundColor: "white"
     },
     mainHeading:
     {
-        marginHorizontal:10,
-        marginVertical:10,
-        fontSize:23,
-        fontFamily:'Cairo-Bold'
+        marginHorizontal: 10,
+        marginVertical: 10,
+        fontSize: 23,
+        fontFamily: 'Cairo-Bold'
     },
-    secondContainer:{
-flex:2,
-    marginHorizontal:10,
+    secondContainer: {
+        flex: 2,
+        marginHorizontal: 10,
     },
-  
-    mainContainerOutput:{
-        flexDirection:"row",
-        alignItems:"center",
-        borderWidth:1,
-        marginVertical:20
+
+    mainContainerOutput: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderWidth: 1,
+        marginVertical: 20,
+        borderRadius:3
     },
-    textContainer:{
-        marginHorizontal:10
-    }
+    textContainer: {
+        marginHorizontal: 10
+    },
+   
 
 
-  });
+});
 
 export default SearchItems

@@ -17,9 +17,8 @@ import Optionaldetail from "./src/screens/SignIn/Optionaldetail";
 import Tophobbies from "./src/screens/SignIn/Tophobbies"
 import Chats  from "./src/screens/Chat/Chats";
 import SearchItems from "./src/screens/Chat/SearchItems";
-import SearchField  from "./src/screens/Chat/SerachField"
 import Tabs from './src/screens/Chat/Tabs';
-import UserDetail from './src/screens/Details/UserDetails';
+import UserDetails from './src/screens/Details/UserDetails';
 import Personalchat  from './src/screens/Chat/PersonalChat';
 import Useroption from './src/Navigation/Useroption';
 import Membersscanopen  from './src/screens/Welcome Screen/Components/Memberscanopen'
@@ -38,7 +37,6 @@ const MyHeader = (navigation) => {
 const navigator = createStackNavigator(
   {
     Home: HomeScreen,
-    //Nav :Navigationbar,
     Postcode:Searchpostcode,
     WelcomeResult:SearchResult,
     Result: UserResult,
@@ -54,9 +52,8 @@ const navigator = createStackNavigator(
     Tophobbies:Tophobbies,
     Chats:Chats,
     SearchItems:SearchItems,
-    SearchField:SearchField,
     Tabs:Tabs,
-    UserDetail:UserDetail,
+    UserDetails:UserDetails,
     Personalchat :Personalchat,
     Useroption:Useroption,
     Membersscanopen:Membersscanopen,
@@ -70,10 +67,6 @@ const navigator = createStackNavigator(
     defaultNavigationOptions: ({ navigation }) => {
       return MyHeader(navigation)
   }
-    // defaultNavigationOptions: {
-    //   headerShown: false
-
-    // },
   }
 
 );

@@ -38,7 +38,6 @@ const SearchResult = props => {
     return (
     
         <View style={{flex:1,backgroundColor:"white"}}>
-            
             <UserResult searchPostcode={searchPostcode} tittle="Members near you"   /> 
         </View>
 
