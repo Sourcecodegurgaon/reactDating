@@ -36,7 +36,7 @@ import Moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
-import FirstPage from "./FirstPage"
+// import FirstPage from "./FirstPage"
 
 
 

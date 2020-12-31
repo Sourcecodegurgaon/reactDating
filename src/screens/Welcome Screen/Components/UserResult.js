@@ -57,7 +57,7 @@ const UserResult = props => {
             <FlatList
                 data={props.searchPostcode}
                 keyExtractor={(item, index) => String(index)}
-                renderItem={({ item }) => {                    
+                renderItem={({ item }) => {       
                     var active = item.Activity.join(', ')
     
                      const result = item.Birth.toString().replace( /(<([^>]+)>)/ig, '').slice(0, 2) 
@@ -91,6 +91,11 @@ const UserResult = props => {
                                         </View>
                                         <View style={styles.textContainer}>
                                             <View styles={styles.UpperText}>
+                                            
+                                            {/* <View>
+                                            <Text style={styles.nameText}>{item.Postal}</Text>
+                                            </View> */}
+
                                             <View>
                                             <Text style={styles.nameText}>{item.name}</Text>
                                             </View>

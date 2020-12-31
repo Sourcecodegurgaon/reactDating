@@ -72,8 +72,8 @@ useEffect(() => {
 
   })
 
-
-
+// Get name of present route
+console.log(props.navigation.state.routeName);
 })
 
 const ViewEdit = () =>{

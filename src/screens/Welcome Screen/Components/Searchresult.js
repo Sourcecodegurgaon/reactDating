@@ -12,6 +12,8 @@ import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold} from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight} from '@expo-google-fonts/montserrat';
 import { Linking } from 'react-native'
+import { ViewPagerAndroid } from "react-native";
+import { isConfigurationAvailable } from "expo/build/AR";
 
 const SearchResult = props => {
 const { navigation } = props;
@@ -39,17 +41,16 @@ const toggleOverlay = () => {
     navigation.goBack()
 };
 
-useEffect(() => {
-    function getKind() {
-    getSearchData()
-    }
-    
-    getKind();
+useEffect(() => {    
+    getSearchData()            
 }, []);
 
 const  getSearchData  =  async () =>{        
     setspinner(true)
-    const postcode = post.substring(0,post.length - matchLevel.count)            
+    const postcode = post.substring(0,post.length - matchLevel.count)        
+      
+    // Note used postcode value
+      const prevPostcode = (matchLevel.count != 0) ? post.substring(0, post.length - (matchLevel.count - 1)) : null;      
      
     // Axios Api Calling
     const responseUser = await Http.get('post-json', {
@@ -61,7 +62,22 @@ const  getSearchData  =  async () =>{
     }); 
 
     //Set Output in tempCurrPage
-    const tempCurrPage = Object.keys(responseUser.data).map((i) => responseUser.data[i]);
+    var tempCurrPage = Object.keys(responseUser.data).map((i) => responseUser.data[i]);
+    var newTempCurrPage = tempCurrPage;
+
+    if(prevPostcode) {
+        newTempCurrPage = tempCurrPage.filter(function (obj) {
+
+            const str = obj.Postal;                        
+            const post1 = "110030";
+            const prev = new RegExp(prevPostcode, 'g');
+            console.log(str);
+            console.log(prevPostcode);        
+            console.log(str.match(prev));
+
+            return !str.match(prev);
+        });       
+    }
 
     //Check tempCurrPage Length
     if(tempCurrPage.length == 0){
@@ -73,7 +89,7 @@ const  getSearchData  =  async () =>{
         if (tempCurrPage.length > 0) {
             setSearchPostcode(state => ({
                             ...state,
-                            items: searchPostcode.items.concat(tempCurrPage)
+                            items: searchPostcode.items.concat(newTempCurrPage)
             }));
 
             // setSearchPostcode(searchPostcode.data.filter(
@@ -85,8 +101,7 @@ const  getSearchData  =  async () =>{
         }
         
         // Check pageLegth  make Matchlevel ++  and page Inde -1
-        if (tempCurrPage.length < 10) {
-            
+        if (tempCurrPage.length < 10) {          
             // setMatchLevel(incrementCount);
             setMatchLevel(state => ({
                 ...state,
@@ -118,9 +133,9 @@ const  getSearchData  =  async () =>{
                   count: state.count + 1
               }));
 
-    console.log("Page Index " + pageIndex.count);
-    console.log("search postcode " + searchPostcode.items.length);
-    console.log("Match level is " + matchLevel.count + "\n");
+    // console.log("Page Index " + pageIndex.count);
+    // console.log("search postcode " + searchPostcode.items.length);
+    // console.log("Match level is " + matchLevel.count + "\n");
 }
 
 if(!fontsLoaded)
