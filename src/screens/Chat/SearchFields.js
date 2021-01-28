@@ -11,6 +11,8 @@ import { Montserrat_200ExtraLight,Montserrat_400Regular } from '@expo-google-fon
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import { Overlay } from 'react-native-elements';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { createBootstrapComponent } from 'react-bootstrap/esm/ThemeProvider';
 
 const SearchFields = (props) => {
 
@@ -58,6 +60,8 @@ const SearchFields = (props) => {
 
 
  const [Message ,setMessage] = useState()
+
+ const [Loadingspinner,setLoadingspinner] = useState(false)
   let [fontsLoaded] = useFonts({
     Cairo_700Bold,
     Montserrat_200ExtraLight,
@@ -67,7 +71,7 @@ const SearchFields = (props) => {
   const toggleOverlay = () => {
     setVisible(!visible);
   };
-
+ const page= '1000'
 
   useEffect(() => {
 
@@ -78,18 +82,21 @@ const SearchFields = (props) => {
 
     AsyncStorage.getItem('Token', (err, result) => {
       const LogoutToken = JSON.parse(result)
+      setLoadingspinner(true)
       if (LogoutToken != null) {
 
           Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
-            console.log(LogoutToken.data.user.field_tutorial.length)
+           
             if(LogoutToken.data.user.field_tutorial.length == 0)
             {
-              props.navigation.navigation.navigate('Chats')
-              //props.navigation.navigation.navigate('Toutorial')
+              //props.navigation.navigation.navigate('Chats')
+              props.navigation.navigation.navigate('Toutorial')
+              setLoadingspinner(false)
             }
             else
             {
               props.navigation.navigation.navigate('Chats')
+              setLoadingspinner(false)
 
             }
 
@@ -218,11 +225,15 @@ const SearchFields = (props) => {
         params: {
           gender: genderValue,
           meet:looking,
-          activity:selectedItems
+          activity:selectedItems,
+          pageSize:page
+
         }
+       
       }
-  
+
       );
+
       if(response.data.length == 0)
       {
         setspinner(false)
@@ -231,8 +242,8 @@ const SearchFields = (props) => {
       }
       else
       {
-
-
+        console.log("help")
+        console.log(response.data.length)
         setSearch(response.data)
         setspinner(false)
         setoutput(true)
@@ -321,8 +332,8 @@ const SearchFields = (props) => {
  const prefrenceSelect = () =>{
   setLooking("3")
   setgoodfriends(false)
-  setPrefrence(false)
-  setlots(true)
+  setPrefrence(true)
+  setlots(false)
   setnofriend(false)
  }
 
@@ -351,6 +362,13 @@ const SearchFields = (props) => {
   else {
     return (
       <View style={styles.mainContainerField}>
+
+             <Spinner
+                    visible={Loadingspinner}
+                    textContent={'Loading...'}
+                    textStyle={styles.spinnerTextStyle}
+                    overlayColor={"#000000c2"}
+                />   
         {spinner ? (
           <View style={styles.OverLayColor}>
             <View style={styles.OverLayImage}>

@@ -41,7 +41,7 @@ const UserDetails = props => {
     const [date, setdatelValue] = useState("");
     const [IamName, setuserIamtName] = useState();
     const [age, setAge] = useState()
-    const [verfied, setverifed] = useState(false)
+    const [verfied, setverifed] = useState(true)
     const [convert, setconvert] = useState("")
     const [converted, setconverted] = useState("")
     const [Moviesvalue, setMovies] = useState("");
@@ -258,8 +258,8 @@ const UserDetails = props => {
                     }
                     //Verified User
                     if (response.data.field_verfied.length == undefined) {
-                        setverifed(true)
-                        setUnVerfied(false)
+                        // setverifed(true)
+                        // setUnVerfied(false)
                     }
 
 
@@ -665,7 +665,7 @@ const UserDetails = props => {
                                             <Text style={{ fontFamily: 'Cairo_700Bold', fontSize: 19, textAlign: "center" }}>{name}</Text>
                                         ) : null}
                                         {verfied ? (
-                                            <Text style={{ fontFamily: 'Cairo_700Bold', color: "blue", fontSize: 19, textAlign: "center" }}>{name}</Text>
+                                            <Text style={{ fontFamily: 'Cairo_700Bold', color: "#056AAD", fontSize: 19, textAlign: "center" }}>{name}</Text>
                                         ) : null}
                                         <Text style={{ fontFamily: 'Cairo_700Bold', fontSize: 15, textAlign: "center" }}>
                                             {age}, {IamName}
@@ -982,11 +982,12 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
         shadowRadius: 1,
-        elevation: 5
+        elevation: 5,
+
     },
     fourthMainContainer: {
         flexDirection: "row",
-        marginTop: 20
+        marginTop: 30
 
     },
     fourthContentContainer: {

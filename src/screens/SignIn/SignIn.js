@@ -40,6 +40,7 @@ const SignIn = props => {
     useEffect(() => {
         AsyncStorage.getItem('Token', (err, result) => {
             const LogoutToken = JSON.parse(result)
+            console.log(LogoutToken)
             if (LogoutToken != null) {
 
                 Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
@@ -73,6 +74,7 @@ const SignIn = props => {
             AsyncStorage.setItem('Token', JSON.stringify(response))
             AsyncStorage.getItem('Token', (err, result) => {
                 const LogoutToken = JSON.parse(result)
+                console.log(LogoutToken)
                 //Connect Api
                 axios.post('http://gowebtutorial.com/api/json/system/connect', {}, {
                     headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token }
@@ -82,12 +84,15 @@ const SignIn = props => {
                        
                         Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
                             if (LogoutToken.data.user.field_trial_period_start_date.length == undefined) {
-                                becomeCerified()
+                                //becomeCerified()
+                                props.navigation.navigate('Becomeverified')
                                 setspinner(false)
                             }
                             else {
                                 setspinner(false)
                                 props.navigation.navigate('Becomeverified')
+                                //props.navigation.navigate('FindFriends')
+                                
 
                             }
                         })
@@ -118,11 +123,11 @@ const SignIn = props => {
                 var msDiff = new Date().getTime() - new Date(LogoutToken.data.user.field_trial_period_start_date.und[0].value).getTime();    //Future date - current date
             }
             var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24));
-            console.log(daysTill30June2035)
+          
             if (daysTill30June2035 > 8) {
                 setspinner(false)
-                //props.navigation.navigate('FindFriends')
-                props.navigation.navigate('TrialOver')
+                props.navigation.navigate('FindFriends')
+                //props.navigation.navigate('TrialOver')
             }
             else {
                 setspinner(false)

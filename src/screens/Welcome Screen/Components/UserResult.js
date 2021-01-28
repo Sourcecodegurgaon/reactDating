@@ -75,13 +75,16 @@ const UserResult = props => {
                     {
                         var Com = ","
                     }
+                    console.log(item.verfied.length)
+
+                    if(item.verfied == "true"){
                     //.replace( /(<([^>]+)>)/ig, '')
                     return (
                         <SafeAreaView style={{ flex: 1, backgroundColor: "white" ,marginTop:10}} >
                             <ScrollView style={styles.scrollView}>
                                 <TouchableOpacity onPress={toggleOverlay}>
-                                    <View style={styles.notVerified}></View>
-                                    <View style={styles.mainContainer} >
+                                <View style={styles.Verified}><Text style={{color:"white",textAlign:"center", fontFamily: "Montserrat_600SemiBold_Italic",paddingTop:1}}>Verified</Text></View>
+                                    <View style={styles.mainContainerVerified} >
                                         <View style={styles.Image}>
                                             <Image
                                                 style={styles.tinyLogo}
@@ -134,6 +137,69 @@ const UserResult = props => {
 
 
                     )
+                    }
+
+                    else 
+                    {
+                        return (
+                            <SafeAreaView style={{ flex: 1, backgroundColor: "white" ,marginTop:10}} >
+                                <ScrollView style={styles.scrollView}>
+                                    <TouchableOpacity onPress={toggleOverlay}>
+                                        <View style={styles.notVerified}></View>
+                                        <View style={styles.mainContainer} >
+                                            <View style={styles.Image}>
+                                                <Image
+                                                    style={styles.tinyLogo}
+                                                    source={{ uri: item.Picture[0] }}
+                                                    PlaceholderContent={<ActivityIndicator />}
+                                                />
+                                            </View>
+                                            <View style={styles.textContainer}>
+                                                <View styles={styles.UpperText}>
+                                                
+                                                {/* <View>
+                                                <Text style={styles.nameText}>{item.Postal}</Text>
+                                                </View> */}
+    
+                                                <View>
+                                                <Text style={styles.nameText}>{item.name}</Text>
+                                                </View>
+                                                <View>
+                                                <Text style={styles.AgeText}>{result}, {item.Gender}</Text>
+                                                </View>
+                                                <View>
+                                              <Text style={styles.parentText}>{Parent}{Com} {Pets}</Text>
+                                                </View>
+                                                </View>
+                                             
+                                             <View style={styles.LoweText}>
+                                             <View>
+                                                <Text style={styles.activityText} numberOfLines = {2}>Likes {active}</Text>
+    
+                                                </View>
+    
+                                                <View style={styles.InterestedContainer}>
+                                                <Text style={styles.oneLineActivity} >Interested in {singleActivity}</Text>
+    
+                                                </View>
+                                             </View>
+                                                </View>
+                                                
+                                               
+                                            
+    
+                                        </View>
+                                    </TouchableOpacity>
+    
+    
+                                </ScrollView>
+    
+    
+                            </SafeAreaView>
+    
+    
+                        ) 
+                    }
 
                 }}
             />
@@ -204,11 +270,32 @@ const styles = StyleSheet.create({
     
         
     },
+    mainContainerVerified:{
+        flexDirection: "row",
+        marginVertical: 10,
+        marginHorizontal: 10,
+        borderWidth: 1,
+        backgroundColor: 'white',
+        paddingHorizontal:20,
+        paddingVertical:20,
+        borderRadius:15,
+        alignItems:"center",
+        borderTopLeftRadius:0,
+        shadowColor: '#8B8E8F',
+        shadowOffset: { width: 4, height: 4 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,  
+        elevation: 5,
+        height:150,
+        borderColor:"#056AAD",
+
+
+    },
     oneLineActivity:{
         fontFamily: 'Montserrat_500Medium', 
         color: 'black', 
         fontSize: 13,
-        marginRight:20,width:150
+        marginRight:20
     },
     textContainer: {
         justifyContent: "space-between",
@@ -331,7 +418,17 @@ const styles = StyleSheet.create({
     },
     InterestedContainer:{
     marginTop:5,  
-    }
+    },
+    Verified:{
+        backgroundColor: "#056AAD",
+        height: 20,
+        width: 80,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        marginBottom: -10,
+        marginLeft: 10,
+       color:"white"
+    },
 });
 
  

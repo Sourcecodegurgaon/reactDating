@@ -162,16 +162,17 @@ const Tophobbies = (props) => {
                   },
                   field_top3_activities: {
                     und: selectedItems,
-                  },
-                  field_activities_interests: {
-                    und: otherActvities,
-                  },
+                  }
+               
 
 
               },{ headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
                 setspinner(false)
                 props.navigation.navigate('Tabs')
-            })
+            }).catch(function (error) {
+              setspinner(false)
+              console.log(error.response)
+          });
             }     
           }) 
    
@@ -205,7 +206,10 @@ const Tophobbies = (props) => {
                
             })  
             }     
-          }) 
+          }) .catch(function (error) {
+            setspinner(false)
+            console.log(error.response)
+        });
    
 
 
@@ -224,6 +228,7 @@ const Tophobbies = (props) => {
           visible={spinner}
           textContent={'Updating...'}
           textStyle={styles.spinnerTextStyle}
+          overlayColor={"#000000c2"}
         />
             <View style={styles.secondContainer}>
                 <View>
@@ -248,6 +253,7 @@ const Tophobbies = (props) => {
                              expandDropDowns={true}
                              readOnlyHeadings={true}
                              selectChildren={true}
+                             showChips	={false}
                              />
 
                               
@@ -362,6 +368,9 @@ const styles = StyleSheet.create({
         overflow: "hidden"
 
     },
+    spinnerTextStyle:{
+      color:"white"
+    }
 
 
 })

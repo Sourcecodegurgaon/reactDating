@@ -42,11 +42,11 @@ const Becomeverified = (props) => {
       
          if(daysTill30June2035 > 8)
          {
-            //props.navigation.navigate('Tabs')
+            props.navigation.navigate('Tabs')
         }
          else
          {
-            //props.navigation.navigate('FindFriends')
+            props.navigation.navigate('FindFriends')
          }
         });
       }
@@ -69,17 +69,24 @@ const Becomeverified = (props) => {
                         }
                     ]
                 },
-
+                field_verfied:   { 
+                    und: [
+                    {
+                      value: "true"
+                    }
+                  ]
+                }
                 
             }, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
-        
                 setspinner(false)
+               
                 props.navigation.navigate('FindFriends')
+        
             })
 
-
+            setspinner(false)
         })
-
+        setspinner(false)
 
     
       }
@@ -96,6 +103,7 @@ const Becomeverified = (props) => {
                 visible={spinner}
                 textContent={'Updating...'}
                 textStyle={styles.spinnerTextStyle}
+                overlayColor={"#000000c2"}
             />
             <View style={styles.secondContainer}>
 
@@ -193,6 +201,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'Montserrat_400Regular',
         marginTop: 40
+    },
+    spinnerTextStyle:{
+        color:"white"
     }
 })
 export default Becomeverified

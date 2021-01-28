@@ -26,6 +26,10 @@
       "supportsTablet": true
     },
     "android": {
+      "adaptiveIcon":{
+        "foregroundImage":"./assets/adaptive-icon.png",
+       "backgroundColor":"#ffffff"
+       },
       "package": "com.not4dating.not4dating"
     },
     "description": ""

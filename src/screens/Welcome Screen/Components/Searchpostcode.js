@@ -61,7 +61,6 @@ const Searchpostcode = props => {
                 setspinner(false)
                 setTerm(null)
                 setSelectedValue(null)
-                console.log()
             }
 
             let location = await Location.getCurrentPositionAsync({});
@@ -218,6 +217,7 @@ const Searchpostcode = props => {
                                         onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                                         containerStyle={styles.DropDown}
                                     >
+                                        <Picker.Item label= 'Select Country'  />
                                         <Picker.Item label= 'Australia' value= 'au' />
                                         <Picker.Item label='Canada' value= 'ca' />
                                         <Picker.Item label = 'India' value ='in'/>

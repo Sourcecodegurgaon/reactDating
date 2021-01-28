@@ -30,13 +30,13 @@ import BlockUser  from './src/Navigation/BlockUser'
 import NewChat from './src/screens/Details/NewChat'
 import TrialOver from './src/screens/SignIn/TrialOver'
 import FifthRoute  from './src/screens/Signup/SignUp'
-import PayPals from './src/screens/Payment/PayPal'
 import FourthRoute from './src/screens/Signup/SignUp'
 import GoPressed from './src/Navigation/Editprofile'
 import Navigatetoscreen from './src/Navigation/NavigateToScreen'
 import NotFoundUser from "./src/screens/Welcome Screen/Components/NotFoundUser"
 import FindUserDetails from "./src/screens/Details/FindUserDetails"
 import Toutorial from "./src/screens/Chat/Toutorial"
+import PayPalExpressCheckOut from "./src/screens/Payment/PayPalExpressCheckOut"
 const MyHeader = (navigation) => {
   return {
       header: props => <Navigationbar {...props} />,
@@ -74,13 +74,13 @@ const navigator = createStackNavigator(
     NewChat:NewChat,
     TrialOver:TrialOver,
     FifthRoute:FifthRoute,
-    PayPal:PayPals,
     FourthRoute:FourthRoute,
     GoPressed:GoPressed ,
     Navigatetoscreen :Navigatetoscreen ,
     NotFoundUser :NotFoundUser ,
     FindUserDetails:FindUserDetails,
-    Toutorial:Toutorial
+    Toutorial:Toutorial,
+    PayPalExpressCheckOut:PayPalExpressCheckOut
   },
   {
     initialRouteName: "Home",

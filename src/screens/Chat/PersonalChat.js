@@ -8,7 +8,8 @@ import {
     TextInput,
     SafeAreaView, ScrollView,
     FlatList,
-    Keyboard
+    Keyboard,
+    KeyboardAvoidingView
 } from "react-native";
 
 import { Button } from 'react-native-elements';
@@ -24,6 +25,7 @@ import { useFonts, Cairo_700Bold} from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight} from '@expo-google-fonts/montserrat';
 import { FontAwesome } from '@expo/vector-icons';
 import InvertibleScrollView from 'react-native-invertible-scroll-view';
+import {AutoScrollFlatList} from "react-native-autoscroll-flatlist";
 
 const Personalchat = (props) => {
     const { navigation } = props;
@@ -76,6 +78,9 @@ const Personalchat = (props) => {
                 handleClick()
             })
         })
+        // _scrollEnd = (evt) => {
+        //     flatList1.scrollToEnd();
+        //   }
     }
 
 
@@ -101,6 +106,9 @@ const Personalchat = (props) => {
             })
         })
     }
+
+   
+    
     if(!fontsLoaded)
     {
       return(<AppLoading />)
@@ -143,12 +151,16 @@ const Personalchat = (props) => {
  
             </View>
 
-            <FlatList
+            <AutoScrollFlatList
+
+           
+             style={{flex: 1}}
              
-              showsHorizontalScrollIndicator={false}
+         
                 data={userSend}
                 keyExtractor={item => item.uid}
                 refreshing={true}
+               
                 renderItem={({ item }) => {
                 
                     var ReceiveMessage = []
@@ -176,7 +188,7 @@ const Personalchat = (props) => {
 
 
                     return(
-                        <ScrollView ref={scrollRef} >
+                        <ScrollView  >
                         <View style={{paddingBottom:10}}>
                        {ReceiveMessage}
                         {sendMessage}

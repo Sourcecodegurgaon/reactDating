@@ -11,20 +11,18 @@ import { Montserrat_400Regular} from '@expo-google-fonts/montserrat';
  
 const FindFriends = props => {
 
-    const [totalPercentage, setTotalPercentage] = useState("")
+    const [totalPercentage, setTotalPercentage] = useState()
     let [fontsLoaded] = useFonts({
         Cairo_700Bold,
         Montserrat_400Regular
       });
     useEffect(() => {
-    
-
-
         AsyncStorage.getItem('Token', (err, result) => {
             const UserDetail = JSON.parse(result)
             if (UserDetail != null) {
                 Http.get('user/' + UserDetail.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
                     if (response.status == 200) {
+                    
                         if (response.data.field_alcohol.length != undefined) {
                             if (response.data.field_alcohol.length == 0) {
                                 var alcohol = 0
@@ -165,29 +163,25 @@ const FindFriends = props => {
                         }
 
 
-
+             
 
                         var total = 12 + alcohol + doforfun + books + movies + musics + tvshows + tends + goodFriend + languages + cancelled + spenddays + talkAbout + yousay
 
 
                         var percentage = total / 25 * 100
                         setTotalPercentage(percentage)
-
-
+                        console.log( percentage )
+                    
                         if (totalPercentage == 100) {
                             props.navigation.navigate('Tabs')
 
                         }
 
-
-
+                    
                     }
 
 
-                    else
-                    {
-                        //props.navigation.navigate('Home')
-                    }
+                   
                 })
             }
         })

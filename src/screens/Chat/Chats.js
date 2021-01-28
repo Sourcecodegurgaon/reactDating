@@ -64,10 +64,12 @@ const Chats = (props) => {
             <View style={styles.secondContainer}>
 
                 <FlatList
+                
                     data={props.chatmessage}
                     keyExtractor={item => item.thread_id}
                     refreshing={true}
                     renderItem={({ item }) => {
+                        console.log(item)
                         const PictureUrl = "http://gowebtutorial.com/sites/default/files/" + item.picture.filename
                        //Time Stamp to Date
                         var t = new Date();
@@ -78,7 +80,7 @@ const Chats = (props) => {
               
                         return (
                             <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-                                <ScrollView style={styles.scrollView}>
+   
                                     <TouchableOpacity onPress={() => props.navigation.navigation.navigate('Personalchat',{
                                         threadId:item.thread_id,
                                         Name:item.name,
@@ -104,7 +106,7 @@ const Chats = (props) => {
 
                                     </View>
                                     </TouchableOpacity>
-                                </ScrollView>
+         
                             </SafeAreaView>
 
                         )

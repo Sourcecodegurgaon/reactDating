@@ -337,7 +337,7 @@ const FindUserDetails = props => {
                     const loggedUser = response.data
                     if (loggedUser.field_favorite_users.length != 0) {
                        
-                        setspinner(true)
+                        setspinner(false)
                         if (loggedUser.field_favorite_users.und) {
                             let parse = JSON.parse(loggedUser.field_favorite_users.und[0].value)
                             for (let userObject of parse) {
@@ -391,7 +391,6 @@ const FindUserDetails = props => {
                         console.log("value doesnt exist");
                         let scope = []
                        scope.push(favInfo)
-                       console.log( scope)
                        addFavorite(scope);
                     }
 
@@ -629,7 +628,7 @@ const FindUserDetails = props => {
                                             <Text style={{ fontFamily: 'Cairo_700Bold', fontSize: 19, textAlign: "center" }}>{name}</Text>
                                         ) : null}
                                         {verfied ? (
-                                            <Text style={{ fontFamily: 'Cairo_700Bold', color: "blue", fontSize: 19, textAlign: "center" }}>{name}</Text>
+                                            <Text style={{ fontFamily: 'Cairo_700Bold', color: "#056AAD", fontSize: 22, textAlign: "center" }}>{name}</Text>
                                         ) : null}
                                         <Text style={{ fontFamily: 'Cairo_700Bold', fontSize: 15, textAlign: "center" }}>
                                             {age}, {IamName}
@@ -637,9 +636,14 @@ const FindUserDetails = props => {
 
                                     </View>
 
-
+                                    {unVerfied ? (
                                     <Image style={styles.ImageProfile} source={{ uri: Picture }} />
-
+                                    ) : null}
+                                     {verfied ? (
+                                         <View style={{borderWidth:4,backgroundColor:"#056AAD",borderColor:"#056AAD"}}>
+                                    <Image style={styles.ImageProfileVerified} source={{ uri: Picture }} />
+                                    </View>
+                                    ) : null}
                                 </View>
 
 
@@ -962,6 +966,10 @@ const styles = StyleSheet.create({
     },
     ImageProfile: {
         height: 80, width: 80,
+    },
+    ImageProfileVerified: {
+        height: 80, width: 80,
+        borderWidth:1
     },
     thirdPhotoContainer: {
         flexDirection: "row",

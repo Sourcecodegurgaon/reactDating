@@ -345,7 +345,7 @@ const Optionaldetail = (props) => {
                                             onValueChange={(itemValue, itemIndex) => setliveValue(itemValue)}
                                             containerStyle={styles.DropDown}
                                         >
-                                             <Picker.Item label='Select Item' value='null' />
+                                             <Picker.Item label='Select Item' />
                                             <Picker.Item label='< 2 years' value='0' />
                                             <Picker.Item label='2-5 years' value='1' />
                                             <Picker.Item label='> 5 years' value='2' />
@@ -391,7 +391,7 @@ const Optionaldetail = (props) => {
                                             onValueChange={(itemValue, itemIndex) => settalkValue(itemValue)}
                                             containerStyle={styles.DropDown}
                                         >
-                                            <Picker.Item label='Select Item' value='null' />
+                                            <Picker.Item label='Select Item'  />
                                             <Picker.Item label='Work' value='Work' />
                                             <Picker.Item label='Family' value='Family' />
                                             <Picker.Item label='Relationships' value='Relationships' />
@@ -442,7 +442,7 @@ const Optionaldetail = (props) => {
                                             onValueChange={(itemValue, itemIndex) => setFriendValue(itemValue)}
                                             containerStyle={styles.DropDown}
                                         >
-                                            <Picker.Item label='Select Item' value='null' />
+                                            <Picker.Item label='Select Item'/>
                                             <Picker.Item label='is always there for me' value='is always there for me' />
                                             <Picker.Item label='always sides with me no matter what.' value='always sides with me no matter what.' />
                                             <Picker.Item label='Relationships' value='Relationships' />
@@ -496,7 +496,7 @@ const Optionaldetail = (props) => {
                                             style={styles.androidPickerDropdown}
                                             onValueChange={(itemValue, itemIndex) => setCancelValue(itemValue)}
                                             containerStyle={styles.DropDown}>
-                                            <Picker.Item label='Select Item' value='null' />
+                                            <Picker.Item label='Select Item'  />
                                             <Picker.Item label='It really bothers me and I am wary of the friendship.' value='It really bothers me and I am wary of the friendship.' />
                                             <Picker.Item label='My reaction depends on the reason why.' value='My reaction depends on the reason why.' />
                                             <Picker.Item label='I’m generally understanding, but I can only be blown off so many times before I will start to question the friendship.' value='I’m generally understanding, but I can only be blown off so many times before I will start to question the friendship.' />
@@ -1843,7 +1843,7 @@ const Optionaldetail = (props) => {
         const [spinner, setspinner] = useState(false)
         const [images, setImages] = useState()
         const [image, setImage] = useState(null);
-        const [imageUrls, setImageUrls] = useState()
+        const [imageUrls, setImageUrls] = useState([])
         const [spinnerSecond, setspinnerSecond] = useState(false)
         
         let [fontsLoaded] = useFonts({
@@ -1940,7 +1940,6 @@ const Optionaldetail = (props) => {
                     }
                     setspinnerSecond(false)
                         var newItem = response.data.field_user_avatar.und
-    
                         setImages(newItem)
               
     
@@ -2007,9 +2006,9 @@ const Optionaldetail = (props) => {
                     field_favorite_tv_shows: { und: [{ value: thirdItems.TVvalue }] },
                     field_favorite_music: { und: [{ value: thirdItems.Musicvalue }] },
                     field_you_say: { und: [{ value: anyThingvalue }] },
-                    field_user_avatar: {
-                        und: [imageUrls],
-                    },
+                    // field_user_avatar: {
+                    //     und: [imageUrls],
+                    // },
                 }, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
                     setspinner(false)
                     setVisible(true)
@@ -2051,7 +2050,7 @@ const Optionaldetail = (props) => {
                         <View style={{ marginVertical: 20, borderWidth: 1, borderRadius: 20,  marginVertical: 20 }}>
                             <Progress.Bar progress={1} unfilledColor="white" color="#056AAD" animationType="spring" width={317} borderColor="white" height={20} borderRadius={10} />
                         </View>
-                        <Text style={styles.labelTextTextarea}>Do you want to add some more photos?</Text>
+                        {/* <Text style={styles.labelTextTextarea}>Do you want to add some more photos?</Text>
                         <Text style={styles.labelUnderText}>(Up to 8)</Text>
                         <FlatList
                             data={images}
@@ -2070,12 +2069,12 @@ const Optionaldetail = (props) => {
                                 )
     
                             }}
-                        />
+                        /> */}
     
-                        <View style={styles.imageUploadButton}>
+                        {/* <View style={styles.imageUploadButton}>
                             <Entypo name="camera" size={24} color="black" />
                             <Text style={styles.imageUploadButtonText} onPress={pickImage} >Upload From Gallery</Text>
-                        </View>
+                        </View> */}
     
     
     

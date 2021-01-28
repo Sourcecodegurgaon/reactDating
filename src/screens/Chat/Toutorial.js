@@ -11,11 +11,16 @@ import { useFonts, Cairo_700Bold} from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight} from '@expo-google-fonts/montserrat';
 import { Dimensions } from 'react-native';
 import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 const Toutorial = (props) => {
   console.log(Dimensions.get('window').height)
   console.log(Dimensions.get('window').width)
+
+  const [imageOne,setImageOne]= useState(true)
+  const [imageTwo,setImageTwo]= useState(false)
+  const [imageThree,setImageThree]= useState(false)
 
     useEffect(() => {
         AsyncStorage.getItem('Token', (err, result) => {
@@ -32,6 +37,27 @@ const Toutorial = (props) => {
         const win = Dimensions.get('window');
         const ratio = win.width/541; 
     }, [])
+
+
+
+     const changeImageTwo = () =>{
+       console.log("check")
+      setImageOne(false)
+      setImageTwo(true)
+     }
+
+     const changeImageThree = () =>{
+  
+     setImageOne(false)
+     setImageTwo(false)
+     setImageThree(true)
+     console.log("check2")
+    }
+
+    const GotoTabs = () =>{
+        props.navigation.navigate('Tabs')
+    }
+
     let [fontsLoaded] = useFonts({
         Cairo_700Bold,
         Montserrat_200ExtraLight
@@ -47,11 +73,27 @@ const Toutorial = (props) => {
 
 
 <View style={styles.ImagesTotutrialcontainer}>
-<ImageBackground source={require('../../../assets/Images/tutorial.jpg')} style={{width: Dimensions.get('window').width,
-        height: 800 * Dimensions.get('window').width/375}} resizeMode='cover'>
+ 
+{imageOne?(
+    <TouchableOpacity onPress={changeImageTwo}>
+<ImageBackground source={require('../../../assets/Images/tutorial.jpg')} style={{height:"100%",width:"100%",marginTop:12}}resizeMode='contain'>
     </ImageBackground>
+    </TouchableOpacity>
+):null}
 
-</View>
+{imageTwo?(
+    <TouchableOpacity  onPress={changeImageThree}>
+    <ImageBackground source={require('../../../assets/Images/tutorial2.jpg')} style={{height:"100%",width:"100%",marginTop:12}} resizeMode='contain'>
+    </ImageBackground>
+    </TouchableOpacity>
+):null}
+{imageThree ?(
+    <TouchableOpacity onPress={GotoTabs}>
+    <ImageBackground source={require('../../../assets/Images/tutorial3.jpg')} style={{height:"100%",width:"100%",marginTop:12}} resizeMode='contain'>
+    </ImageBackground>
+    </TouchableOpacity>
+    ):null}
+</View> 
 
 
            
@@ -76,7 +118,9 @@ const styles = StyleSheet.create({
    
     ImagesTotutrialcontainer:{
 
-      flex:1,
+    flex:1,
+    justifyContent:"center",
+    alignContent:"center"
       
 
     },
