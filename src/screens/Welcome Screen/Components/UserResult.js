@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold} from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight,Montserrat_700Bold_Italic,Montserrat_600SemiBold_Italic,Montserrat_500Medium_Italic,Montserrat_500Medium,Montserrat_400Regular} from '@expo-google-fonts/montserrat';
-import Moment from 'moment';
+import { TouchableWithoutFeedback} from "react-native";
 
 const UserResult = props => { 
     const [isSelected, setSelection] = useState(true);
@@ -82,7 +82,8 @@ const UserResult = props => {
                     return (
                         <SafeAreaView style={{ flex: 1, backgroundColor: "white" ,marginTop:10}} >
                             <ScrollView style={styles.scrollView}>
-                                <TouchableOpacity onPress={toggleOverlay}>
+                                <TouchableWithoutFeedback onPress={toggleOverlay}>
+                                <View>
                                 <View style={styles.Verified}><Text style={{color:"white",textAlign:"center", fontFamily: "Montserrat_600SemiBold_Italic",paddingTop:1}}>Verified</Text></View>
                                     <View style={styles.mainContainerVerified} >
                                         <View style={styles.Image}>
@@ -127,7 +128,8 @@ const UserResult = props => {
                                         
 
                                     </View>
-                                </TouchableOpacity>
+                                    </View>
+                                </TouchableWithoutFeedback>
 
 
                             </ScrollView>
@@ -144,7 +146,8 @@ const UserResult = props => {
                         return (
                             <SafeAreaView style={{ flex: 1, backgroundColor: "white" ,marginTop:10}} >
                                 <ScrollView style={styles.scrollView}>
-                                    <TouchableOpacity onPress={toggleOverlay}>
+                                    <TouchableWithoutFeedback onPress={toggleOverlay}>
+                                    <View>
                                         <View style={styles.notVerified}></View>
                                         <View style={styles.mainContainer} >
                                             <View style={styles.Image}>
@@ -189,7 +192,8 @@ const UserResult = props => {
                                             
     
                                         </View>
-                                    </TouchableOpacity>
+                                        </View>
+                                    </TouchableWithoutFeedback>
     
     
                                 </ScrollView>

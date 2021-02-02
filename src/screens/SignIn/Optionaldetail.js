@@ -79,8 +79,8 @@ const Optionaldetail = (props) => {
         const [PetValue, setPetValue] = useState("")
         const [daysvalue, setdays] = useState("")
         const [spaekvalue, setspeak] = useState("")
-    
-    
+  
+     
     
         const [android, setAndroid] = useState(false)
         const [ios, setIos] = useState(false)
@@ -99,14 +99,12 @@ const Optionaldetail = (props) => {
             AsyncStorage.getItem('Token', (err, result) => {
                 const UserDetail = JSON.parse(result)
                 CheckPhone()
-    
+        setspinner(true)
                 if (UserDetail != null) {
                     Http.get('user/' + UserDetail.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
                         if (response.status == 200) {
-                            setspinner(true)
                             setCountry(response.data.field_zip_code.und[0].country)
                             setPostal(response.data.field_zip_code.und[0].postal_code)
-    
                             if (response.data.field_do_for_fun.length == undefined) {
                                 setactivityValue(response.data.field_do_for_fun.und[0].value)
                             }
@@ -116,29 +114,22 @@ const Optionaldetail = (props) => {
                             if (response.data.field_talk_about.length == undefined) {
                                 settalkValue(response.data.field_talk_about.und[0].value)
                             }
-    
                             if (response.data.field_good_friend.length == undefined) {
                                 setFriendValue(response.data.field_good_friend.und[0].value)
                             }
-    
                             if (response.data.field_plans_get_cancelled.length == undefined) {
-                                console.log(response.data.field_plans_get_cancelled.und[0].value)
                                 setCancelValue(response.data.field_plans_get_cancelled.und[0].value)
                             }
-    
                             if (response.data.field_relationship_status.length == undefined) {
                                 setStatusValue(response.data.field_relationship_status.und[0].value)
                             }
-    
                             if (response.data.field_kids.length == undefined) {
                                 setKidsValue(response.data.field_kids.und[0].value)
                             }
-    
-    
+                            
                             if (response.data.field_any_pets.length == undefined) {
                                 setPetValue(response.data.field_spend_your_days.und[0].value)
                             }
-    
                             if (response.data.field_spend_your_days.length == undefined) {
                                 setdays(response.data.field_spend_your_days.und[0].value)
                             }
@@ -169,7 +160,7 @@ const Optionaldetail = (props) => {
     
     
         const nextRoute = () =>{
-            const FirstRoute ={liveValue: liveValue, talkValue: talkValue, FriendValue: FriendValue,CancelValue: CancelValue, activityValue: [activityValue]}
+            const FirstRoute ={liveValue: liveValue, talkValue: talkValue, FriendValue: FriendValue,CancelValue: CancelValue, activityValue: activityValue}
              setFirstItems(FirstRoute)
             setFirstItem(false)
             setSecondItem(true)
@@ -300,7 +291,7 @@ const Optionaldetail = (props) => {
             return (
                 <ScrollView overScrollMode='always'>
                 <View style={{ backgroundColor: "white", paddingHorizontal: 20,height:"100%" }}>
-    
+             
                 <Spinner
                         visible={spinner}
                         textContent={'Retrieving...'}
@@ -444,10 +435,10 @@ const Optionaldetail = (props) => {
                                         >
                                             <Picker.Item label='Select Item'/>
                                             <Picker.Item label='is always there for me' value='is always there for me' />
-                                            <Picker.Item label='always sides with me no matter what.' value='always sides with me no matter what.' />
-                                            <Picker.Item label='Relationships' value='Relationships' />
-                                            <Picker.Item label='Relationships' value='Relationships' />
-                                            <Picker.Item label='will be honest with me even if it hurts.' value='will be honest with me even if it hurts.' />
+                                            <Picker.Item label='always sides with me no matter what' value='always sides with me no matter what' />
+                    
+
+                                            <Picker.Item label='will be honest with me even if it hurts' value='will be honest with me even if it hurts' />
                                             <Picker.Item label='gives advice' value='gives advice' />
                                             <Picker.Item label='is an activity partner' value='is an activity partner' />
                                         </Picker>
@@ -465,12 +456,12 @@ const Optionaldetail = (props) => {
                                     <DropDownPicker
                                         items={[
                                             { label: 'is always there for me', value: 'is always there for me' },
-                                            { label: 'always sides with me no matter what.', value: 'always sides with me no matter what.' },
+                                            { label: 'always sides with me no matter what.', value: 'always sides with me no matter what' },
                                             { label: 'Relationships', value: 'Relationships' },
-                                            { label: 'will be honest with me even if it hurts.', value: 'will be honest with me even if it hurts.' },
+                                            { label: 'will be honest with me even if it hurts', value: 'will be honest with me even if it hurts' },
                                             { label: 'gives advice', value: 'gives advice' },
                                             { label: 'Fashion', value: 'Fashion' },
-                                            { label: 'takes my advice.', value: 'takes my advice.' },
+                                            { label: 'takes my advice', value: 'takes my advice' },
                                             { label: 'is an activity partner', value: 'is an activity partner' },
                                         ]}
                                         defaultIndex={0}
@@ -526,8 +517,49 @@ const Optionaldetail = (props) => {
                                     />
                                 ) : null}
                             </View>
+                            {/* <View style={styles.fifthdropDownStyle}>
+                                <Text style={styles.labelText}>Most Of My Friends Tend To Be</Text>
+                                {android ? (
+                                    <View style={styles.androidDropDown}>
+                                        <Picker
+                                            selectedValue={CancelValue}
+                                            style={styles.androidPickerDropdown}
+                                            onValueChange={(itemValue, itemIndex) => setCancelValue(itemValue)}
+                                            containerStyle={styles.DropDown}>
+                                            <Picker.Item label='Select Item'  />
+                                            <Picker.Item label='Only Child' value='Only Child' />
+                                            <Picker.Item label='Eldest Child' value='Eldest Child' />
+                                            <Picker.Item label='Youngest Child' value='Youngest Child' />
+                                            <Picker.Item label='Middle Child' value='Middle Child' />
+                                            <Picker.Item label="Don't Know/Don't Care" value="Don't Know/Don't Care" />
+                                        </Picker>
+                                    </View>
+                                ) : null}
     
     
+    
+                                {ios ? (
+                                    <DropDownPicker
+                                        items={[
+                                            {label:'Only Child' ,value:'Only Child' },
+                                            { label:'Eldest Child' ,value:'Eldest Child' },
+                                            { label:'Youngest Child' ,value='Youngest Child' },
+                                            {label:'Middle Child' ,value='Middle Child' },
+                                            {label:"Don't Know/Don't Care" ,value:"Don't Know/Don't Care" },
+                                 
+                                        ]}
+    
+                                        containerStyle={styles.DropDown}
+                                        labelStyle={styles.dropDownActive}
+                                        activeItemStyle={styles.dropDownActive}
+                                        dropDownStyle={{ backgroundColor: '#fafafa', zIndex: 200 }}
+                                        onChangeItem={items => setCancelValue(items.value)}
+                                        value={CancelValue}
+                                        defaultValue={CancelValue}
+                                    />
+                                ) : null}
+                            </View> */}
+                            
                             <View style={styles.mainContainerPicker}>
                                 <Button
                                     onPress={nextRoute}
@@ -562,7 +594,7 @@ const Optionaldetail = (props) => {
         const [CancelValue, setCancelValue] = useState("")
         const [StatusValue, setStatusValue] = useState()
         const [KidsValue, setKidsValue] = useState("")
-        const [PetValue, setPetValue] = useState([])
+        const [PetValue, setPetValue] = useState()
         const [daysvalue, setdays] = useState("")
         const [spaekvalue, setspeak] = useState("")
         const [spinner,setspinner] = useState(false)
@@ -627,15 +659,11 @@ const Optionaldetail = (props) => {
                             }
     
                             if (response.data.field_relationship_status.length == undefined) {
-                                console.log(response.data.field_relationship_status.und[0].value)
                                 if (response.data.field_relationship_status.und[0].value == "Married") {
-    
                                     setMarried(true)
                                     setStatusValue("Married")
-    
                                 }
                                 else if (response.data.field_relationship_status.und[0].value == "Co-habitating") {
-    
                                     setHabitating(true)
                                     setStatusValue("Co-habitating")
                                 }
@@ -669,7 +697,7 @@ const Optionaldetail = (props) => {
                                 setOther(true)
                                 setStatusValue() 
                             }
-    
+
                             if (response.data.field_kids.length == undefined) {
                                 if (response.data.field_kids.und[0].value == "Yes") {
                                     setKidsYes(true)
@@ -684,19 +712,16 @@ const Optionaldetail = (props) => {
                                 setKidsOther(true)
                                 setKidsValue()
                             }
-    
-    
+                            console.log(response.data.field_any_pets)
                             if (response.data.field_any_pets.length == undefined) {
-                                setPetValue(response.data.field_spend_your_days.und[0].value)
+                                setPetValue(response.data.field_any_pets.und[0].value)
                             }
-    
                             if (response.data.field_spend_your_days.length == undefined) {
                                 setdays(response.data.field_spend_your_days.und[0].value)
                             }
                             if (response.data.field_languages.length == undefined) {
                                 setspeak(response.data.field_languages.und[0].value)
                             }
-    
                         }
                         setspinner(false)
                     })
@@ -759,15 +784,11 @@ const Optionaldetail = (props) => {
                 setKidsOther(true)
                 setKidsValue()
             }
-            setPetValue(secondsItems.PetValue)
+            setPetValue(secondsItems.PetValue[0])
             setdays(secondsItems.daysvalue)
             setspeak(secondsItems.spaekvalue)
-
-
-
             }
             })
-    
         }, [])
     
         const Single = () => {
@@ -840,24 +861,13 @@ const Optionaldetail = (props) => {
         }
     
         // Dummy Data for the MutiSelect
-        const petsList = {
-    
-            'Dog': 'Dog',
-            'Cat': 'Cat',
-            'Rabbit': 'Rabbit',
-            'Birds': 'Birds',
-            'Fish': 'Fish',
-            'Reptile': 'Reptile',
-            'Other': 'Other'
-    
-    
-        }
+     
     
         const items = [
             // this is the parent or 'item'
             {
               name: 'Do you have pets?',
-              id: 0,
+            
               // these are the children or 'sub items'
               children: [
                 {
@@ -867,10 +877,6 @@ const Optionaldetail = (props) => {
                 {
                   name: 'Cat',
                   id: 'Cat',
-                },
-                {
-                  name: 'sightseeing',
-                  id: 'sightseeing',
                 },
                 {
                   name: 'Rabbit',
@@ -1023,7 +1029,7 @@ const Optionaldetail = (props) => {
     
                             <View style={styles.eightdropDownStyle}>
                                 <Text style={styles.labelText}>Do you have pets?</Text>
-                        
+                            
                                 <View style={{ marginHorizontal: 5, borderRadius: 5 ,borderWidth:1,height:50}}>
                                 <SectionedMultiSelect
                                  items={items}
@@ -1031,9 +1037,8 @@ const Optionaldetail = (props) => {
                                  uniqueKey="id"
                                  subKey="children"
                                  showDropDowns={true}
-                                 readOnlyHeadings={true}
                                  onSelectedItemsChange={onSelectedItemsChange}
-                                  selectedItems={PetValue}
+                                 selectedItems={PetValue}
                                  hideSearch={false}
                                  expandDropDowns={true}
                                  readOnlyHeadings={true}
@@ -1857,8 +1862,7 @@ const Optionaldetail = (props) => {
            
         };
         const changePage = () =>{
-        props.props.navigation.navigate('FindFriends')
-        }
+        props.props.navigation.navigate('FindFriends',{userUpated: "true"})}
         const pickImage = async () => {
     
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -1885,7 +1889,7 @@ const Optionaldetail = (props) => {
                 filename: filename,
                 filepath: "public://" + filename,
             }).then((response) => {
-                console.log(response)
+            
             //     setspinner(true)
     
     
@@ -1919,6 +1923,7 @@ const Optionaldetail = (props) => {
     
         var items = [];
         useEffect(() => {
+            console.log([firstItems.FriendValue])
             AsyncStorage.getItem('Token', (err, result) => {
                 const UserDetail = JSON.parse(result)
                 const userId = UserDetail.data.user.uid
@@ -1929,7 +1934,7 @@ const Optionaldetail = (props) => {
                         if (response.data.field_you_say.length == undefined) {
                             setanyThing(response.data.field_you_say.und[0].value)
                         }
-                        console.log(response.data.field_user_avatar.length)
+
                         if(response.data.field_user_avatar.length == undefined){
                         for (let i = 0; i <= response.data.field_user_avatar.und.length; i++) {
                             items.push(response.data.field_user_avatar.und[i])
@@ -1955,34 +1960,38 @@ const Optionaldetail = (props) => {
         }
         //User Details Update
         const UserDetails = () => {
+         console.log(secondsItems.PetValue)
             //setspinner(true)
             AsyncStorage.getItem('Token', (err, result) => {
                 const UserDetail = JSON.parse(result)
                 const userId = UserDetail.data.user.uid
                 setspinner(true)
                 Http.put('user/' + userId, {
+                     field_do_for_fun: {
+                        und: firstItems.activityValue
+                    },
                     field_long_in_city: {
                         und: firstItems.liveValue,
                     },
-    
-                    field_talk_about: {
-                        und: firstItems.talkValue,
-                    },
-                    field_do_for_fun: {
-                        und: firstItems.activityValue[0]
-                    },
+                    field_talk_about: {und:[firstItems.talkValue]},
+                   
+                 
                     field_good_friend:
                     {
-                        und: firstItems.FriendValue
+                       und:[firstItems.FriendValue] 
                     },
+                  
                     field_plans_get_cancelled: {
-                        und: firstItems.CancelValue,
+                        und:firstItems.CancelValue,
                     },
                     field_relationship_status: {
                         und: secondsItems.StatusValue,
                     },
+                    field_kids:{
+                        und:secondsItems.KidsValue
+                       },
                     field_any_pets: {
-                        und: secondsItems.PetValue,
+                        und:[secondsItems.PetValue],
                     },
                     field_spend_your_days: {
                         und: [

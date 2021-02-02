@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Picker, FlatList, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, View, Picker, FlatList, SafeAreaView, ScrollView, TouchableOpacity,ListItem ,SectionList} from "react-native";
 import React, { useState, Component, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements';
@@ -10,7 +10,9 @@ import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold } from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight, Montserrat_700Bold_Italic, Montserrat_600SemiBold_Italic, Montserrat_500Medium_Italic, Montserrat_500Medium, Montserrat_400Regular } from '@expo-google-fonts/montserrat';
 
-
+import { TouchableWithoutFeedback} from "react-native";
+import { AsyncStorage } from 'react-native';
+import Http from '../../Api/Http'
 
 
 
@@ -24,14 +26,68 @@ const SearchItems = props => {
         Montserrat_500Medium,
         Montserrat_400Regular
     });
+
+    const [blocking,setBlocking] = useState()
     const deleteItemById = Uid => () => {
         const filteredData = props.searchResults.filter(item => item.Uid !== Uid);
         props.searchResults({ data: filteredData });
       }
-    useEffect(() => {deleteItemById}, []);
+  
+      
+    useEffect(() => {
+        
+    
+        deleteItemById()
+
+
+
+
+        for(let use of props.searchResults.help)
+        {
+            setBlocking(use.uid) 
+  
+        }
+        AsyncStorage.getItem('Token', (err, result) => {
+            const LogoutToken = JSON.parse(result)
+        
+                 Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((responses) => {
+                  if(responses.data.field_block_users.length == undefined)
+                  {
+                  const User = JSON.parse(responses.data.field_block_users.und[0].value)
+                  //setBlocking(User) 
+                //   for(let users of props.searchResults)
+
+                //   console.log(users)
+                //   {
+//                   for (let userObject of User)
+//                         {
+//                             if(userObject != undefined && users.Uid != userObject.uid)
+//                             {
+// console.log(users)
+//                                 setBlocking(userObject)  
+//                             }
+                          
+//                         }
+                    //}
+               
+                  }
+     
+ 
+               
+                 })
+       
+       
+             
+        })
+      
+   
+    }, []);
    
     const [verfified, setVerified] = useState()
     const [unverfified, setUnVerified] = useState(true)
+
+   
+      
     if (!fontsLoaded) {
         return (<AppLoading />)
     }
@@ -41,14 +97,18 @@ const SearchItems = props => {
 
 
             <SafeAreaView  style={styles.container}>
-                <FlatList
-                    data={props.searchResults}
-                  
-                    renderItem={({ item }) => {
-                     
-                    const result = item.Birth.toString().replace(/(<([^>]+)>)/ig, '').slice(0, 2)
-              
-                        if(item.avatar == 0 && result >= props.minage && result <= props.Maxage &&  item.verfied.length == undefined) {
+
+
+              <FlatList
+                    data={props.searchResults.New}
+                    renderItem={({item}) => {
+
+                    
+             
+       
+                    const result = item.Birth.toString().replace(/(<([^>]+)>)/ig, '').slice(0, 2)  
+
+                        if(item.avatar == 0 && result >= props.minage && result <= props.Maxage &&  item.verfied.length == undefined ) {
                          
                         var active = item.Activities.join(', ')
 
@@ -64,15 +124,16 @@ const SearchItems = props => {
                         if (item.kids.length > 0 && item.Pets.length > 0) {
                             var Com = "," 
                         }
-                        //.replace( /(<([^>]+)>)/ig, '')
+                   
 
                      
                         return (
                             <View style={{ flex: 1, backgroundColor: "white", marginTop: 10 }} >
                                 <View style={styles.scrollView}>
-                                    <TouchableOpacity onPress={() => props.navigation.navigation.navigation.navigate('FindUserDetails', {
+                                    <TouchableWithoutFeedback onPress={() => props.navigation.navigation.navigation.navigate('FindUserDetails', {
                                         uid: item.Uid
-                                    })}>
+                                    })} 
+                                    >    <View>
                                            <View style={styles.Verified}><Text style={{color:"white",textAlign:"center", fontFamily: "Montserrat_600SemiBold_Italic",paddingTop:1}}>Verified</Text></View>
                                                     <View style={styles.VeifiedmainContainer} >
                                       
@@ -113,7 +174,8 @@ const SearchItems = props => {
 
 
                                         </View>
-                                    </TouchableOpacity>
+                                        </View>
+                                    </TouchableWithoutFeedback>
 
 
                                 </View>
@@ -126,8 +188,10 @@ const SearchItems = props => {
                                 }
 
 
-                               else if(item.avatar == 0 && result >= props.minage && result <= props.Maxage &&  item.verfied.length != undefined) {
-                         
+                               else if(item.avatar == 0 && result >= props.minage && result <= props.Maxage &&  item.verfied.length != undefined && item.Uid != blocking ) {
+                              
+                              
+                                  
                                     var active = item.Activities.join(', ')
             
                                     const result = item.Birth.toString().replace(/(<([^>]+)>)/ig, '').slice(0, 2)
@@ -146,11 +210,13 @@ const SearchItems = props => {
                                     return (
                                         <View style={{ flex: 1, backgroundColor: "white", marginTop: 10 }} >
                                             <View style={styles.scrollView}>
-                                                <TouchableOpacity onPress={() => props.navigation.navigation.navigation.navigate('FindUserDetails', {
+                                            <TouchableWithoutFeedback  onPress={() => props.navigation.navigation.navigation.navigate('FindUserDetails', {
                                                     uid: item.Uid
-                                                })}>
-                                                   <View style={styles.notVerified}></View>
-                                        <View style={styles.mainContainer} >
+                                                })} activeOpacity="0.1">
+                                                    <View>
+                                                    <View style={styles.notVerified}></View>
+                                                  <View style={styles.mainContainer} >
+
                                                         <View style={styles.Image}>
                                                             <Image
                                                                 style={styles.tinyLogo}
@@ -188,7 +254,8 @@ const SearchItems = props => {
             
             
                                                     </View>
-                                                </TouchableOpacity>
+                                                    </View>
+                                                </ TouchableWithoutFeedback >
             
             
                                             </View>
@@ -199,6 +266,7 @@ const SearchItems = props => {
             
                                     )
                                             }
+                                        
                                 else
                                 {
                                     <View style={{flex:2,backgroundColor:"white",justifyContent:"center"}}>
@@ -206,9 +274,9 @@ const SearchItems = props => {
                                     </View>
                                 }
                                 
-                    }}
-                    keyExtractor={(item, index) => item.Uid}
-                    />
+                     }}
+                     keyExtractor={(item,index)=>index}
+                    /> 
 
 
             </SafeAreaView >

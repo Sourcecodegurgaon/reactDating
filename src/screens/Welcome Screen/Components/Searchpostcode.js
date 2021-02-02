@@ -55,7 +55,7 @@ const Searchpostcode = props => {
             setTerm(null)
                 setSelectedValue(null)
             let { status } = await Location.requestPermissionsAsync();
-            console.log(status)
+
             if (status !== 'granted') {
                 setErrorMsg('Permission to access location was denied');
                 setspinner(false)

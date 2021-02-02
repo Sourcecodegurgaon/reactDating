@@ -43,9 +43,11 @@ const MyHeader = (navigation) => {
       headerStyle: { backgroundColor: '#fff' },
       headerTintColor: '#000',
   };
+
   }
 const navigator = createStackNavigator(
   {
+
     Home: HomeScreen,
     Postcode:Searchpostcode,
     WelcomeResult:SearchResult,
@@ -82,6 +84,7 @@ const navigator = createStackNavigator(
     Toutorial:Toutorial,
     PayPalExpressCheckOut:PayPalExpressCheckOut
   },
+
   {
     initialRouteName: "Home",
     defaultNavigationOptions: ({ navigation }) => {

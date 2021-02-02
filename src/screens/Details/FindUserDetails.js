@@ -150,11 +150,12 @@ const FindUserDetails = props => {
                         var birthDate = new Date(dateDMY);
                         var age = today.getFullYear() - birthDate.getFullYear();
                         var m = today.getMonth() - birthDate.getMonth();
+                        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                            age--;
+                        }
                         const ages = age
                         setAge(ages)
-                        // if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                        //     age--;
-                        // }
+                     
                     }
 
                     
@@ -321,6 +322,7 @@ const FindUserDetails = props => {
 
                     //getLoggedInUser()
                     checUserFavorites()
+                    checBlockUser()
              
                 })
         })
@@ -426,9 +428,7 @@ const FindUserDetails = props => {
             }, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } })
                 .then((response) => {
                     checUserFavorites()
-                }).catch(function (error) {
-                    console.log(error.response)
-                });
+                })
 
         });
     }
@@ -459,7 +459,7 @@ const FindUserDetails = props => {
                         if (loggedUser.field_block_users.und) {
                             let parse = JSON.parse(loggedUser.field_block_users.und[0].value)
                             for (let userObject of parse) {
-                                setspinner(true)
+                                setspinner(false)
                                 if (uid == userObject.uid) {
                                     console.log("This person is already a blocked");
                                     setalreadyBlocked(true)
@@ -473,7 +473,7 @@ const FindUserDetails = props => {
                     }
                         
 
-                    checBlockUser()
+                    
                     });
                 });
 
@@ -490,14 +490,9 @@ const FindUserDetails = props => {
 
                           
                     if (response.data.field_block_users.und) {
-                        console.log("value exists");
                         
                         let scope = JSON.parse(response.data.field_block_users["und"][0]["value"])
                         scope.push(favInfo)
-                        // const uniqueScopes = removeDuplicatesBy(
-                        //     (x) => x[0].uid,
-                        //     scope
-                        // );
                         block(scope)
     
 
@@ -508,6 +503,8 @@ const FindUserDetails = props => {
                        block(scope)
                     }                    
                     setBlockVisible(false)
+                }).catch(function (error) {
+                    console.log(error)
                 });
         });
 
@@ -531,6 +528,8 @@ const FindUserDetails = props => {
             }, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } })
                 .then((response) => {
                     checBlockUser()
+                }).catch((error)=> {
+                    console.log(error.response)
                 })
 
         });
@@ -803,7 +802,7 @@ const FindUserDetails = props => {
                         <View style={styles.fourthMainCotainer}>
                             {Moviesstatus ? (
                                 <View style={styles.mainContainerTwoLiner}>
-                                    <Text style={styles.fourthContentContainerBold}>Favorate Movies:
+                                    <Text style={styles.fourthContentContainerBold}>Favourite Movies:
                                         <Text style={styles.fifthConatinerOutputText}> {Moviesvalue}</Text>
                                     </Text>
                                 </View>
@@ -811,14 +810,14 @@ const FindUserDetails = props => {
 
                             {Booksstatus ? (
                                 <View style={styles.mainContainerTwoLiner}>
-                                    <Text style={styles.fourthContentContainerBold}>Favorate Books:
+                                    <Text style={styles.fourthContentContainerBold}>Favourite Books:
                                         <Text style={styles.fifthConatinerOutputText}> {Booksvalue}</Text>
                                     </Text>
                                 </View>
                             ) : null}
                             {Tvstatus ? (
                                 <View style={styles.mainContainerTwoLiner}>
-                                    <Text style={styles.fourthContentContainerBold}>Favorate TV Shows:
+                                    <Text style={styles.fourthContentContainerBold}>Favourite TV Shows:
                                         <Text style={styles.fifthConatinerOutputText}> {TVvalue}</Text>
                                     </Text>
                                 </View>

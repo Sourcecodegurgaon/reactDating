@@ -28,7 +28,7 @@ return(
        </TouchableOpacity>  
         ):null}
 
-    <TouchableOpacity onPress={()=>props.navigation.navigation.navigate('Home')}>
+    <TouchableOpacity>
     <Image source={require('../../assets/Images/header-logo.png')}/>
    </TouchableOpacity>
   </View>

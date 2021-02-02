@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 29546,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "packagerPid": 77236,
+  "expoServerNgrokUrl": "https://qn-wsr.ritinzd.reactdating.exp.direct",
+  "packagerNgrokUrl": "https://packager.qn-wsr.ritinzd.reactdating.exp.direct",
+  "ngrokPid": 77516,
   "webpackServerPort": null
 }

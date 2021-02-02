@@ -1938,6 +1938,10 @@ const SignUp = props => {
             
             var d = new Date();
             var n = d.getTimezoneOffset();
+            var a = new Date(firstItems.date);
+            var n = a.getFullYear();
+
+  
             Http.post("user/register", {
                 name: firstItems.userName,
                 mail: enterEmail,
@@ -1971,15 +1975,11 @@ const SignUp = props => {
                         },
                     ],
                 },
-                field_birth_date: {
-                    und: [{
-                    //value:firstItems.date,
+                field_birth_date:{und:[{value:{month:"4"}}]},
+                field_birth_date:{und:[{value:{date:"4"}}]},
+                field_birth_date:{und:[{value:{year:n}}]},
                 
-                     value:'1975-11-12 00:00:00',
-                    
-                    },
-                    ]
-                    },
+           
        
     
                 field_gender: {
@@ -2025,7 +2025,7 @@ const SignUp = props => {
     
                 })
 
-             }
+              }
     
     
     

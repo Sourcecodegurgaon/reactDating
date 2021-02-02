@@ -13,7 +13,7 @@ import { useFonts, Cairo_700Bold} from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight} from '@expo-google-fonts/montserrat';
 import { Linking } from 'react-native'
 import { ViewPagerAndroid } from "react-native";
-import { isConfigurationAvailable } from "expo/build/AR";
+import { TouchableWithoutFeedback} from "react-native";
 
 const SearchResult = props => {
 const { navigation } = props;
@@ -31,6 +31,8 @@ const [spinner ,setspinner] = useState(false)
 
 const [currPages,setcurrPage] = useState()
 
+const [noUsers,setNoUser] = useState(false)
+
 let [fontsLoaded] = useFonts({
     Cairo_700Bold,
     Montserrat_200ExtraLight
@@ -40,16 +42,62 @@ const toggleOverlay = () => {
     setVisible(!visible);
     navigation.goBack()
 };
+const nousertoggleOverlay = () => {
+    setNoUser(!noUsers);
+    navigation.goBack()
+    
+};
 
-useEffect(() => {    
-    getSearchData()            
+
+useEffect(() => {     
+    getCountry()         
 }, []);
 
-const  getSearchData  =  async () =>{        
+
+getCountry = async () =>{
+
+
+    const countryUser = await Http.get('countrylisting', {
+        params: {
+            country: country,
+        }
+        
+    })
+
+    const PostalUser = await Http.get('PostalListing', {
+        params: {
+            postal_code: post,
+        }
+        
+    })
+
+    if(countryUser.data.length == 0)
+    {
+        //navigation.navigate('NotFoundUser')
+    }
+    if(countryUser.data.length != 0)
+    {
+    if(PostalUser.data.length == 0)
+    {
+        setNoUser(true);
+    }
+    else
+    {
+        getSearchData()
+    }
+}
+}
+
+const  getSearchData  =  async () =>{       
+    
+    
+
+
+
     setspinner(true)
     const postcode = post.substring(0,post.length - matchLevel.count)        
       
-    // Note used postcode value
+    // Note used postcode value 
       const prevPostcode = (matchLevel.count != 0) ? post.substring(0, post.length - (matchLevel.count - 1)) : null;      
      
     // Axios Api Calling
@@ -71,9 +119,9 @@ const  getSearchData  =  async () =>{
             const str = obj.Postal;                        
             const post1 = "110030";
             const prev = new RegExp(prevPostcode, 'g');
-            console.log(str);
-            console.log(prevPostcode);        
-            console.log(str.match(prev));
+            // console.log(str);
+            // console.log(prevPostcode);        
+            // console.log(str.match(prev));
 
             return !str.match(prev);
         });       
@@ -181,7 +229,25 @@ return (
             </View>
         </Overlay> 
     
-
+        <Overlay isVisible={noUsers} onBackdropPress={nousertoggleOverlay} >
+            <View>
+           
+                <View>
+              
+                <View style={{paddingVertical:10,justifyContent:"center",alignItems:"center"}}>
+                <Text style={styles.notFoundText}>No users in your pincode</Text>
+                <Button
+                                onPress={nousertoggleOverlay}
+                                    buttonStyle={{ backgroundColor: "#056AAD", textAlign: "center", borderRadius: 10, }}
+                                    containerStyle={{ marginHorizontal: 20, marginVertical: 15, width: 100, justifyContent: "center" }}
+                                    titleStyle={{ fontSize: 18, fontFamily: 'Cairo_700Bold' }}
+                                    title="Back"
+                                />
+                </View>
+                </View>
+            </View>
+        </Overlay> 
+    
     </View>
 
 )

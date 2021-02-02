@@ -94,7 +94,7 @@ const LogOut = () => {
   setspinner(true)
   AsyncStorage.getItem('Token', (err, result) => {
       const LogoutToken = JSON.parse(result)
-      console.log(LogoutToken.data.sessid )
+
      
   //Logout
   axios.post('http://gowebtutorial.com/api/json/user/logout', {}, {

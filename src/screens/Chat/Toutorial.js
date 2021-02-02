@@ -12,6 +12,7 @@ import { Montserrat_200ExtraLight} from '@expo-google-fonts/montserrat';
 import { Dimensions } from 'react-native';
 import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode'
 import Spinner from 'react-native-loading-spinner-overlay';
+import { Value } from "react-native-reanimated";
 
 
 const Toutorial = (props) => {
@@ -27,10 +28,14 @@ const Toutorial = (props) => {
             const LogoutToken = JSON.parse(result)
             if (LogoutToken != null) {
 
-                Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
-                  console.log(LogoutToken.data.user.field_tutorial.length)
-                })
-
+                if(LogoutToken.data.user.field_tutorial.length == 0 || LogoutToken.data.user.field_tutorial.length == undefined)
+                {
+                  props.navigation.navigate('Toutorial')
+                }
+                else
+                {
+                    props.navigation.navigate('Tabs')
+                }
 
             }
         })
@@ -51,10 +56,42 @@ const Toutorial = (props) => {
      setImageOne(false)
      setImageTwo(false)
      setImageThree(true)
-     console.log("check2")
+    
     }
 
     const GotoTabs = () =>{
+
+        AsyncStorage.getItem('Token', (err, result) => {
+            const LogoutToken = JSON.parse(result)
+            if (LogoutToken != null) {
+
+                Http.put('user/' + LogoutToken.data.user.uid, {
+                    field_tutorial:{
+                        und:[{
+                            value: "true"
+                        }
+                        ]
+                    }
+                
+                },{ headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } },
+
+                
+                
+                
+                
+                ).then((response) => {
+                 console.log(response)
+
+
+                }).catch(function (error) {
+                    console.log(error.response)
+                })
+
+
+            }
+        })
+        const win = Dimensions.get('window');
+        const ratio = win.width/541; 
         props.navigation.navigate('Tabs')
     }
 

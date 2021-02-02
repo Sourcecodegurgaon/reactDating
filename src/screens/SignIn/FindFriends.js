@@ -8,18 +8,41 @@ import Http from '../../Api/Http'
 import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold} from '@expo-google-fonts/cairo';
 import { Montserrat_400Regular} from '@expo-google-fonts/montserrat';
- 
+import Spinner from 'react-native-loading-spinner-overlay';
 const FindFriends = props => {
 
     const [totalPercentage, setTotalPercentage] = useState()
+    const [spinner,setspinner] = useState(false)
     let [fontsLoaded] = useFonts({
         Cairo_700Bold,
         Montserrat_400Regular
       });
+ 
     useEffect(() => {
+   
+        getPercent() 
+      
+       
+        
+
+
+
+
+
+
+
+
+
+    }, [])
+
+
+
+    const getPercent = () =>{
         AsyncStorage.getItem('Token', (err, result) => {
+      
             const UserDetail = JSON.parse(result)
             if (UserDetail != null) {
+                setspinner(true)
                 Http.get('user/' + UserDetail.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
                     if (response.status == 200) {
                     
@@ -165,15 +188,15 @@ const FindFriends = props => {
 
              
 
-                        var total = 12 + alcohol + doforfun + books + movies + musics + tvshows + tends + goodFriend + languages + cancelled + spenddays + talkAbout + yousay
+                        var total = 12 + alcohol + doforfun + books + movies + musics + tvshows +  goodFriend + languages + cancelled + spenddays + talkAbout + yousay
 
 
-                        var percentage = total / 25 * 100
+                        var percentage = total / 24 * 100
                         setTotalPercentage(percentage)
-                        console.log( percentage )
+         
                     
                         if (totalPercentage == 100) {
-                            props.navigation.navigate('Tabs')
+                            //props.navigation.navigate('Tabs')
 
                         }
 
@@ -181,22 +204,13 @@ const FindFriends = props => {
                     }
 
 
-                   
+                    setspinner(false)
                 })
             }
+           
         })
+    }
 
-
-
-
-
-
-
-
-
-
-
-    }, [])
     if(!fontsLoaded)
     {
       return(<AppLoading />)
@@ -204,7 +218,14 @@ const FindFriends = props => {
     else{
 
     return (
+        
         <View style={styles.mainContainer}>
+              <Spinner
+                        visible={spinner}
+                        textContent={'Updating...'}
+                        textStyle={styles.spinnerTextStyle}
+                        overlayColor={"#000000c4"}
+                    />
             <View style={styles.secondContainer}>
                 <View>
                     <Text style={styles.upperText}>Hello! What would you like to do first?</Text>
@@ -279,6 +300,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         flex: 2,
         paddingHorizontal:20
+    },
+    spinnerTextStyle:{
+        color:"white"
     }
 
 

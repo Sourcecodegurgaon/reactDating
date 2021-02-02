@@ -163,7 +163,7 @@ function MyTabs(props) {
         let iconName;
         if (route.name === 'Chat') {
           iconName = focused ? 'ios-chatbubbles' : 'ios-chatbubbles';
-        } else if (route.name === 'Favorate') {
+        } else if (route.name === 'Favorite') {
           iconName = focused ? 'ios-star' : 'ios-star';
         }
         else if (route.name === 'Search') {
@@ -178,7 +178,7 @@ function MyTabs(props) {
         inactiveTintColor: 'gray',
       }}  initialRouteName="Search">
       <Tab.Screen name="Chat"  children={()=><SettingsScreen propName={props} />}/>
-      <Tab.Screen name="Favorate" children={()=><Favorates propName={props}/>}/>
+      <Tab.Screen name="Favorite" children={()=><Favorates propName={props}/>}/>
     <Tab.Screen name="Search"  children={()=><SearcUserTab propName={props}/>}/>
     </Tab.Navigator>
    

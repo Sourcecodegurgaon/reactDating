@@ -13,8 +13,9 @@ import Moment from 'moment';
 import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold } from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight,Montserrat_400Regular } from '@expo-google-fonts/montserrat';
-
-
+import { NativeModules } from 'react-native'
+import RCTNetworking from 'react-native/Libraries/Network/RCTNetworking'
+//var RCTNetworking = require(“RCTNetworking”);
 const SignIn = props => {
     const [user, setUser] = useState(null)
     const [pass, setPass] = useState(null)
@@ -25,7 +26,7 @@ const SignIn = props => {
     const toggleOverlay = () => {
         setVisible(!visible);
     };
-
+    
 
 
     //Spinner
@@ -38,9 +39,13 @@ const SignIn = props => {
 
 
     useEffect(() => {
+       
+        RCTNetworking.clearCookies(() => { });
+
+        setspinner(false)
+
         AsyncStorage.getItem('Token', (err, result) => {
             const LogoutToken = JSON.parse(result)
-            console.log(LogoutToken)
             if (LogoutToken != null) {
 
                 Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
@@ -64,17 +69,14 @@ const SignIn = props => {
     const Login = () => {
         setspinner(true)
 
-    
-       
         //Login User Api
         axios.post('http://gowebtutorial.com/api/json/user/login', { username: user, password: pass }, {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         }).then((response) => {
-            setspinner(true)
+            setspinner(false)
             AsyncStorage.setItem('Token', JSON.stringify(response))
-            AsyncStorage.getItem('Token', (err, result) => {
-                const LogoutToken = JSON.parse(result)
-                console.log(LogoutToken)
+             AsyncStorage.getItem('Token', (err, result) => {
+              const LogoutToken = JSON.parse(result)
                 //Connect Api
                 axios.post('http://gowebtutorial.com/api/json/system/connect', {}, {
                     headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token }
@@ -83,17 +85,15 @@ const SignIn = props => {
                         AsyncStorage.setItem('Connected', JSON.stringify(response))
                        
                         Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
-                            if (LogoutToken.data.user.field_trial_period_start_date.length == undefined) {
-                                //becomeCerified()
-                                props.navigation.navigate('Becomeverified')
+                            console.log(response.data.field_trial_period_start_date.length)
+                            if (response.data.field_trial_period_start_date.length == undefined || response.data.field_trial_period_start_date.length != '0') {
+                                becomeCerified()
                                 setspinner(false)
                             }
                             else {
                                 setspinner(false)
                                 props.navigation.navigate('Becomeverified')
                                 //props.navigation.navigate('FindFriends')
-                                
-
                             }
                         })
                     }
@@ -101,9 +101,10 @@ const SignIn = props => {
 
                 })
 
-            });
+             });
         }).catch(function (error) {
             setspinner(false)
+console.log(error.response)
             if (error.response.status) {
                 setspinner(false)
                 setVisible(true)

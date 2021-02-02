@@ -25,7 +25,7 @@ const NewChat = props => {
       });
     
     useEffect(() => {
-
+console.log(props.navigation)
         AsyncStorage.getItem('Token', (err, result) => {
             const UserDetail = JSON.parse(result)
             if (UserDetail != null) {

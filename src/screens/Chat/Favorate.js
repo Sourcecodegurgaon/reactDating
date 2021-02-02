@@ -9,7 +9,7 @@ import { render } from "react-dom";
 import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold} from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight, Montserrat_700Bold_Italic, Montserrat_600SemiBold_Italic, Montserrat_500Medium_Italic, Montserrat_500Medium, Montserrat_400Regular } from '@expo-google-fonts/montserrat';
-
+import { TouchableWithoutFeedback} from "react-native";
 const Favorate = (props) => {
     const [search, setSearch] = useState("")
     const [activityValue, setactivity] = useState("")
@@ -85,7 +85,9 @@ const Favorate = (props) => {
                 return (
                     <View style={{ flex: 2, backgroundColor: "white", marginTop: 10 }} >
                         <View style={styles.scrollView}>
-                            <TouchableOpacity onPress={()=> props.navigation.navigation.navigate('FindUserDetails',{uid:item.uid})}>
+                            <TouchableWithoutFeedback onPress={()=> props.navigation.navigation.navigate('FindUserDetails',{uid:item.uid})}>
+
+                            <View>
                                 <View style={styles.notVerified}></View>
                                 <View style={styles.mainContainer} >
                                     <View style={styles.Image}>
@@ -125,7 +127,9 @@ const Favorate = (props) => {
 
 
                                 </View>
-                            </TouchableOpacity>
+
+                                </View>
+                            </TouchableWithoutFeedback>
 
 
                         </View>

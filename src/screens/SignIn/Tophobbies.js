@@ -168,7 +168,7 @@ const Tophobbies = (props) => {
 
               },{ headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
                 setspinner(false)
-                props.navigation.navigate('Tabs')
+                props.navigation.navigate('FindFriends')
             }).catch(function (error) {
               setspinner(false)
               console.log(error.response)
@@ -199,14 +199,17 @@ const Tophobbies = (props) => {
                  
               },{ headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
               
-                console.log(response)
+
                 setspinner(false)
-                             props.navigation.navigate('Tabs')
+                             props.navigation.navigate('FindFriends')
 
                
-            })  
+            }).catch(function (error) {
+              setspinner(false)
+              console.log(error.response)
+          });  
             }     
-          }) .catch(function (error) {
+          }).catch(function (error) {
             setspinner(false)
             console.log(error.response)
         });

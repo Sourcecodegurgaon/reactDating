@@ -15,16 +15,17 @@ const Chats = (props) => {
 
 
     useEffect(() => {
+        console.log(props)
         AsyncStorage.getItem('Token', (err, result) => {
             const LogoutToken = JSON.parse(result)
             if (LogoutToken != null) {
 
                 Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
                   console.log(LogoutToken.data.user.field_tutorial.length)
-                  if(LogoutToken.data.user.field_tutorial.length == 0)
+                  if(LogoutToken.data.user.field_tutorial.length != undefined)
                   {
-                    props.navigation.navigation.navigate('Chats')
-                    //props.navigation.navigation.navigate('Toutorial')
+                    //props.navigation.navigation.navigate('Chats')
+                    props.navigation.navigation.navigate('Toutorial')
                   }
                   else
                   {

@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import { Overlay } from 'react-native-elements';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { createBootstrapComponent } from 'react-bootstrap/esm/ThemeProvider';
+
 
 const SearchFields = (props) => {
 
@@ -23,7 +23,7 @@ const SearchFields = (props) => {
   const [meetValue, setmeetValue] = useState("0");
 
   const [gender, setDefaultGender] = useState("")
-  const [searchResults, setSearch] = useState()
+  const [searchResults, setSearch] = useState({ items: []})
   const [liveValue, setliveValue] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const [activityValue, setactivityValue] = useState("");
@@ -62,6 +62,12 @@ const SearchFields = (props) => {
  const [Message ,setMessage] = useState()
 
  const [Loadingspinner,setLoadingspinner] = useState(false)
+ const [matchLevel, setMatchLevel] = useState({count: 0});
+const [pageIndex, setPageIndex] = useState({count: 0});
+const [searchPostcode, setSearchPostcode] = useState({ items: []});
+ const [blockUser,SetblockUser] = useState([])
+
+
   let [fontsLoaded] = useFonts({
     Cairo_700Bold,
     Montserrat_200ExtraLight,
@@ -80,16 +86,17 @@ const SearchFields = (props) => {
       android: () => setAndroid(true)
     })();
 
+  
+
     AsyncStorage.getItem('Token', (err, result) => {
       const LogoutToken = JSON.parse(result)
       setLoadingspinner(true)
       if (LogoutToken != null) {
 
           Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
-           
-            if(LogoutToken.data.user.field_tutorial.length == 0)
+
+            if(response.data.field_tutorial.length != undefined)
             {
-              //props.navigation.navigation.navigate('Chats')
               props.navigation.navigation.navigate('Toutorial')
               setLoadingspinner(false)
             }
@@ -106,7 +113,12 @@ const SearchFields = (props) => {
 
       }
   })
-  }, [])
+
+  const unsubscribe = navigation.addListener('focus', () => {
+    console.log('Refreshed!');
+  });
+  return unsubscribe
+  }, [navigation])
 
   const items = [
     // this is the parent or 'item'
@@ -211,28 +223,48 @@ const SearchFields = (props) => {
   ];
   
 
-  const searchResult = async () => {
 
-    if(genderValue == null || Minage == null || Maxage == null || looking == null)
+
+  const userSearch = () =>
+  {
+
+    if(genderValue == "null")
+    {
+      showmoresearchResultEveryOne()
+     
+    }
+    if(genderValue != "null")
+    {
+      showmoresearchResult()
+    }
+  }
+  
+
+  const showmoresearchResult = async () => {
+    //const postcode = post.substring(0,post.length - matchLevel.count)        
+    // Note used postcode value
+    if( Minage == null || Maxage == null || looking == null)
     {
       setVisible(true)
       setMessage("Please fill all fields")
     }
     else
     {
+      
+
       setspinner(true)
-      const response = await Http.get('search-view', {
+      const response = await Http.get('search-view',{
         params: {
           gender: genderValue,
           meet:looking,
           activity:selectedItems,
-          pageSize:page
+          page:pageIndex.count
 
         }
-       
       }
 
       );
+    
 
       if(response.data.length == 0)
       {
@@ -242,15 +274,53 @@ const SearchFields = (props) => {
       }
       else
       {
-        console.log("help")
-        console.log(response.data.length)
-        setSearch(response.data)
+        //setSearch(response.data)
         setspinner(false)
         setoutput(true)
         setSearchField(false)
-
+        var tempCurrPage = Object.keys(response.data).map((i) => response.data[i]);
+        var newTempCurrPage = tempCurrPage;
+        if (tempCurrPage.length > 0) {
+          AsyncStorage.getItem('Token', (err, result) => {
+            const LogoutToken = JSON.parse(result)
+        
+                 Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((responses) => {
+                  if(responses.data.field_block_users.length == undefined)
+                  {
+                  const User = JSON.parse(responses.data.field_block_users.und[0].value)
+                  SetblockUser(User) 
+              
+                  setSearch(state => ({...state,items:searchResults.items.concat(newTempCurrPage)}));
  
+               
+                  }
+       
+       
+             
+        })
+         
+
+      }) 
       
+
+          // setSearch(state => ({
+          //                 ...state,
+          //                 items: searchResults.items.concat(newTempCurrPage)
+          // }));
+
+    
+
+          setspinner(false)
+      }
+      if (tempCurrPage.length < 10) {          
+
+        setMatchLevel(state => ({ ...state,count: state.count + 1}));
+        setPageIndex(state => ({...state,count: -1}));
+        setPageIndex(0);
+        setspinner(false)
+    }
+    setspinner(false)
+    setPageIndex(state => ({...state,count: state.count + 1 }));
      
       }
 
@@ -261,6 +331,90 @@ const SearchFields = (props) => {
    
   }
   }
+
+  const showmoresearchResultEveryOne = async () => {
+    //const postcode = post.substring(0,post.length - matchLevel.count)        
+    // Note used postcode value
+      //const prevPostcode = (matchLevel.count != 0) ? post.substring(0, post.length - (matchLevel.count - 1)) : null;      
+    if( Minage == null || Maxage == null || looking == null)
+    {
+      setVisible(true)
+      setMessage("Please fill all fields")
+    }
+    else
+    {
+ 
+      setspinner(true)
+      const responses = await Http.get('search-view',{
+        params: {
+          meet:looking,
+          activity:selectedItems,
+          page:pageIndex.count
+
+        }
+      }
+
+      );
+    
+
+      if(responses.data.length == 0)
+      {
+        setspinner(false)
+        setVisible(true)
+        setMessage("No result Found")
+      }
+      else
+      {
+        setSearch(responses.data)
+        setspinner(false)
+        setoutput(true)
+        setSearchField(false)
+        var tempCurrPage = Object.keys(responses.data).map((i) => responses.data[i]);
+        var newTempCurrPage = tempCurrPage;
+        if (tempCurrPage.length > 0) {
+          setSearch(state => ({
+                          ...state,
+                          items: searchResults.items.concat(newTempCurrPage)
+          }));
+
+          // setSearchPostcode(searchPostcode.data.filter(
+          //     (thing, index, self) =>
+          //         index === self.findIndex((t) => t.name === thing.name)
+          //     ))
+
+          setspinner(false)
+      }
+      if (tempCurrPage.length < 10) {          
+        // setMatchLevel(incrementCount);
+        setMatchLevel(state => ({
+            ...state,
+            count: state.count + 1
+        }));
+
+        setPageIndex(state => ({
+            ...state,
+            count: -1
+        }));
+        // setPageIndex(0);
+        setspinner(false)
+    }
+    setspinner(false)
+    setPageIndex(state => ({
+        ...state,
+        count: state.count + 1
+    }));
+     
+      }
+
+    
+
+
+
+   
+  }
+  }
+
+
 
   const onSelectedItemsChange = (selectedItems) => {
     // Set Selected Items
@@ -302,7 +456,7 @@ const SearchFields = (props) => {
   }
 
   const EveryoneSelect = () =>{
-    setgenderValue("Everyone")
+    setgenderValue("null")
     setMale(false)
     setFemale(false)
     setDiverse(false)
@@ -324,8 +478,8 @@ const SearchFields = (props) => {
  const lotsSelect = () =>{
   setLooking("2")
   setgoodfriends(false)
-  setPrefrence(true)
-  setlots(false)
+  setPrefrence(false)
+  setlots(true)
   setnofriend(false)
  }
 
@@ -587,7 +741,7 @@ const SearchFields = (props) => {
 
                   <View style={{ marginVertical: 20 }} >
                     <Button title="Find Friends"
-                      onPress={searchResult}
+                      onPress={userSearch}
                       containerStyle={{ marginVertical: 10 }}
                       buttonStyle={{ marginHorizontal: 15, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
                       titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 18 }}
@@ -616,14 +770,21 @@ const SearchFields = (props) => {
               {/*Search Result area start */}
               {output ? (
                 <View style={{ flex: 3 }}>
-                  <SearchItems searchResults={searchResults} navigation={props} minage={Minage}  Maxage={Maxage}/>
-
+                  <SearchItems searchResults={{New:searchResults.items,help:blockUser}} navigation={props} minage={Minage}  Maxage={Maxage}  />
+                  <Button title="Show more"
+                    onPress={userSearch}
+                    containerStyle={{ marginVertical: 20 }}
+                    buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
+                    titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 20 }}
+                    containerStyle={{ width: "100%" }} />
+                    <View style={{height:10}}></View>
                   <Button title="Back"
                     onPress={showSearchFields}
                     containerStyle={{ marginVertical: 20 }}
                     buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
                     titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 20 }}
                     containerStyle={{ width: "100%" }} />
+                     <View style={{height:10}}></View>
                 </View>
               ) : null}
  <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
