@@ -35,7 +35,7 @@ const TrialOver = props => {
                     buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
                     titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 18 }}
                     containerStyle={{ width: "100%" }} 
-                    onPress={()=> props.navigation.navigate('PayPals')}/>
+                    onPress={()=> props.navigation.navigate('Payment')}/>
                 <Text style={styles.BelowText} onPress={() => Linking.openURL('https://not4dating.com/')}>No Thanks! I am happy to
                 stay a basic member. Take
                 me to the free web version at

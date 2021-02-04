@@ -71,6 +71,14 @@ const Moreinfo = props => {
     const [considerStatus, setconsiderStatus] = useState(false)
     const [unVerfied, setUnVerfied] = useState(true)
     const [living, setliving] = useState(false)
+    const [Nokid,setNoKid] = useState(false)
+    const [Yeskid,setYeskid] = useState(false)
+    const [PetParent,setPetApent] = useState(false)
+    const[children,setchildrenValue] = useState()
+const [Pet,setPet] = useState(false)
+const [petvalue,setPetvalue] = useState()
+const[music,setMusic] = useState(false)
+const[musicValue,setmusicValue] = useState()
 
 
     let [fontsLoaded] = useFonts({
@@ -106,12 +114,12 @@ const Moreinfo = props => {
                         var age = today.getFullYear() - birthDate.getFullYear();
                         var m = today.getMonth() - birthDate.getMonth();
                         const ages = age
-
+                        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                            age--;
+                        }
 
                         setAge(ages)
-                        // if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                        //     age--;
-                        // }
+                       
 
 
                     }
@@ -133,16 +141,19 @@ const Moreinfo = props => {
 
                     if (response.data.field_activities_interests.length == undefined) {
 
-                        const activityLength = response.data.field_activities_interests.und.length
-                        for (let i = 0; i <= activityLength; i++) {
+                      
+                      
+                                var ActivityArray = []
+                                const ActivitUser = response.data.field_activities_interests.und
+                                for(let userObj of ActivitUser)
+                                {
+                                    ActivityArray = ActivityArray.concat(userObj.value)
+                                }
+                                 var Active = ActivityArray.join(", ");
+                                setactivityValue([Active ])
+                            
+                        
 
-
-                            if (response.data.field_activities_interests.und[i] != undefined) {
-                                setactivityValue(response.data.field_activities_interests.und[i].value)
-
-                            }
-
-                        }
 
                     }
 
@@ -238,16 +249,87 @@ const Moreinfo = props => {
                         setverifed(true)
                         setUnVerfied(false)
                     }
+                    if(response.data.field_kids.length == undefined)
+                    {
+                        if(response.data.field_kids.und[0].value == "No")
+                        {
+                            setNoKid(true)
+                        }
+                        if(response.data.field_kids.und[0].value == "Yes")
+                        {
+                            setYeskid(true)
+                        }
+                    }
+
+                    if (response.data.field_favorite_music.length == undefined) {
+                        setMusic(true)
+                        setmusicValue(response.data.field_favorite_music.und[0].value)
+                    }
+                   
+
+                    if(response.data.field_any_pets.length == undefined )
+                    {
+
+                  
+                      
+                      
+                                var PetArray = []
+                                const ActivitUser = response.data.field_any_pets.und
+                                for(let userObj of ActivitUser)
+                                {
+                                    PetArray = PetArray.concat(userObj.value)
+                                }
+                                 var PetActive = PetArray.join(", ");
+                                 Pet,setPet(true)
+                                 petvalue,setPetvalue(PetActive)
+                             
+                
+                            
+                        
+
+                    }
+
+                    if(response.data.field_any_pets.length == undefined && response.data.field_kids.length == undefined)
+                    {
+                        setPetApent(true)
+                        if(response.data.field_kids.und[0].value == "No")
+                        {
+                            setNoKid(false)
+                            setchildrenValue("I do not have")
+                           
+                        }
+                        if(response.data.field_kids.und[0].value == "Yes")
+                        {
+                            setYeskid(false)
+                            setchildrenValue("I have")
+                         
+                        }
+                  
+                                var PetArray = []
+                                const ActivitUser = response.data.field_any_pets.und
+                                for(let userObj of ActivitUser)
+                                {
+                                    PetArray = PetArray.concat(userObj.value)
+                                }
+                                 var PetActive = PetArray.join(", ");
+                                 setPet(false)
+                                 setPetvalue(PetActive)
+                             
+                
+                            
+                        
+
+                    }
 
 
+                    
+                    
+                    PetParent
                     setconvert(response.data.login)
                     const converting = response.data.login
                     const unixTime = converting;
                     const dates = new Date(unixTime * 1000);
                     setconverted(dates.toLocaleDateString("en-US"))
-
-
-
                     setspinner(false)
 
 
@@ -371,6 +453,9 @@ const Moreinfo = props => {
             ) : null}
 
             {/* Pets */}
+     
+
+                                
 
             {speakstatus ? (
                 <Text style={styles.fifthConatinerText}>In addition to English, I also speak <Text style={styles.Outputfont}>{spaekvalue}</Text></Text>
@@ -379,6 +464,29 @@ const Moreinfo = props => {
             {DaysStatus ? (
                 <Text style={styles.fifthConatinerText}>I spend my days <Text style={styles.Outputfont}>{daysvalue} </Text></Text>
             ) : null}
+
+                           {Nokid ?(
+                               <Text style={styles.fifthConatinerText}><Text style={styles.Outputfont}>I do not</Text> have children.</Text>  
+                                ):null}
+                                 {Yeskid ?(
+                               <Text style={styles.fifthConatinerText}><Text style={styles.Outputfont}>I have</Text> children.</Text>  
+                                ):null}
+
+
+                              {Pet ?(
+                               <Text style={styles.fifthConatinerText}>I have<Text style={styles.Outputfont}> one {petvalue}</Text></Text>  
+                                ):null}
+
+                          {PetParent ?(
+                              
+                         <Text style={styles.fifthConatinerText}><Text style={styles.Outputfont}>{children}</Text> children and have <Text style={styles.Outputfont}> One {petvalue}</Text></Text>  
+
+                          ):null}
+
+
+
+
+
 
             {AnythingelseStatus ? (
                 <Text style={styles.fifthConatinerText}>Anything else <Text style={styles.Outputfont}>{anyThingvalue}</Text></Text>
@@ -394,24 +502,61 @@ const Moreinfo = props => {
                 ) : null}
                 </View>
 
+
+               
           
 
-                <Button containerStyle={{ marginHorizontal: 20, marginVertical: 15 }}
-                        onPress={() => props.navigation.navigate('Optionaldetail')}
-                        title="Add More Info"
-                        buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
-                        titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 18 }} />
+            
 
 
 
 
         </View>
+        <View style={{height:20}}></View>
+     
     </View>
 
 
    
 
+    <View style={styles.fourthMainCotainer}>
+                            {Moviesstatus ? (
+                                <View style={styles.mainContainerTwoLiner}>
+                                    <Text style={styles.fourthContentContainerBold}>Favourite Movies:
+                                        <Text style={styles.fifthConatinerOutputText}> {Moviesvalue}</Text>
+                                    </Text>
+                                </View>
+                            ) : null}
 
+                            {Booksstatus ? (
+                                <View style={styles.mainContainerTwoLiner}>
+                                    <Text style={styles.fourthContentContainerBold}>Favourite Books:
+                                        <Text style={styles.fifthConatinerOutputText}> {Booksvalue}</Text>
+                                    </Text>
+                                </View>
+                            ) : null}
+                            {Tvstatus ? (
+                                <View style={styles.mainContainerTwoLiner}>
+                                    <Text style={styles.fourthContentContainerBold}>Favourite TV Shows:
+                                        <Text style={styles.fifthConatinerOutputText}> {TVvalue}</Text>
+                                    </Text>
+                                </View>
+                            ) : null}
+
+{music ? (
+                                <View style={styles.mainContainerTwoLiner}>
+                                    <Text style={styles.fourthContentContainerBold}>Favourite Music:
+                                        <Text style={styles.fifthConatinerOutputText}> {musicValue}</Text>
+                                    </Text>
+                                </View>
+                            ) : null}
+
+                       <Button containerStyle={{ marginHorizontal: 20, marginVertical: 15 }}
+                        onPress={() => props.navigation.navigate('Optionaldetail')}
+                        title="Add More Info"
+                        buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
+                        titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 18 }} />
+                        </View>
 
 
 
@@ -438,7 +583,7 @@ const styles = StyleSheet.create({
     secondMainCotainer:
     {
 
-        backgroundColor: "white",
+        
         marginHorizontal: 20,
         marginVertical: 20,
         justifyContent: "center",
@@ -654,8 +799,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         flex: 2,
         marginHorizontal: 30,
-        paddingHorizontal: 20,
-        marginBottom:10
+       paddingHorizontal:30,
+        marginBottom:10,
+        marginTop:10
 
     },
     forgotPass: {

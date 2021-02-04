@@ -14,12 +14,17 @@ import { TouchableWithoutFeedback } from "react-native";
 import { AsyncStorage } from 'react-native';
 import Http from '../../Api/Http'
 import Spinner from 'react-native-loading-spinner-overlay';
-
-
-
+import { Button } from 'react-native-elements';
+import { Overlay } from 'react-native-elements';
 
 const SearchItems = props => {
-    const [Loadingspinner,setLoadingspinner] = useState(true)
+    const [Loadingspinner, setLoadingspinner] = useState(false)
+    const [matchLevel, setMatchLevel] = useState({ count: 0 });
+    const [pageIndex, setPageIndex] = useState({ count: 0 });
+    //console.log(props.navigation.state.params.MainData)
+
+    //console.log(props.navigation.state.params.minage)
+    //console.log(props.navigation.state.params.Maxage)
     var mObject
     let [fontsLoaded] = useFonts({
         Cairo_700Bold,
@@ -31,10 +36,12 @@ const SearchItems = props => {
         Montserrat_400Regular
     });
 
-    const [blocking, setBlocking] = useState()
+    const [blocking, setBlocking] = useState({ items: [] })
     const [verfified, setVerified] = useState()
     const [unverfified, setUnVerified] = useState(true)
-    
+    const [visible, setVisible] = useState(false);
+
+    const [result, setResult] = useState(false)
     const array = []
     const deleteItemById = Uid => () => {
         const filteredData = props.searchResults.filter(item => item.Uid !== Uid);
@@ -44,63 +51,207 @@ const SearchItems = props => {
 
     useEffect(() => {
 
-        getUser()
-     
-        props.navigation.navigation.navigation.addListener('didFocus', () => {        
-            getUser()          
+        UserDetails()
+        props.navigation.addListener('didFocus', () => {
+            UserDetails()
         });
-      
-
-     
-
-
-
-   
-
-
-
     }, []);
+    const toggleOverlay = () => {
+        setVisible(!visible);
+    };
 
-const getUser = () =>{
-    setLoadingspinner(true)
-    AsyncStorage.getItem('Token', (err, result) => {
-        const LogoutToken = JSON.parse(result)
-        
-        Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((responses) => {
-            if (responses.data.field_block_users.length == undefined) {
-                const User = JSON.parse(responses.data.field_block_users.und[0].value)
-               var results =[];
-                for (let userObj of User ) {
-                    // Blocked User Uid Coneverted into array
-                    if(userObj != undefined)
-                    {
-                     //Converted Into Array
-                     results = results.concat(userObj.uid)
-                    }
 
-                  
-                }
-                  //Compairing Result Uid with Blocked User Uid
-                  const SerchResultarray = props.searchResults.New
-                  var newObject = SerchResultarray.filter(function (obj) { return !results.includes(obj.Uid);});
-               
 
-   
-                   setBlocking(newObject)
-                   setLoadingspinner(false)
+    const getAlluser = async () => {
+
+        setLoadingspinner(true)
+
+        const response = await Http.get('search-view', {
+            params: {
+                gender: props.navigation.state.params.gender,
+                meet: props.navigation.state.params.meet,
+                activity: props.navigation.state.params.activity[0].value,
+                page: pageIndex.count
+
             }
+        }
+
+        );
+
+
+        if (response.data.length == 0) {
+            setLoadingspinner(false)
+            setVisible(true)
+            setResult(false)
+
+        }
+        else {
+
+            setLoadingspinner(false)
+            setResult(true)
+
+            var tempCurrPage = Object.keys(response.data).map((i) => response.data[i]);
+
+            var newTempCurrPage = tempCurrPage;
+            if (tempCurrPage.length > 0) {
+
+                AsyncStorage.getItem('Token', (err, result) => {
+                    const LogoutToken = JSON.parse(result)
+                    Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((responses) => {
+                        if (responses.data.field_block_users.length == undefined) {
+                            const User = JSON.parse(responses.data.field_block_users.und[0].value)
+                            var results = [];
+                            for (let userObj of User) {
+                                // Blocked User Uid Coneverted into array
+                                if (userObj != undefined) {
+                                    //Converted Into Array
+                                    results = results.concat(userObj.uid)
+                                }
+                            }
+                            //Compairing Result Uid with Blocked User Uid
+                            const newObject = tempCurrPage.filter(function (obj) { return !results.includes(obj.Uid); });
+                            console.log(newObject)
+                            setBlocking(state => ({ ...state, items: blocking.items.concat(newObject) }));
+
+
+                        }
+
+                        if (responses.data.field_block_users.length != undefined) {
+                            setBlocking(state => ({ ...state, items: blocking.items.concat(newTempCurrPage) }));
+
+                        }
+                    })
+
+
+                })
 
 
 
-        })
 
 
-    })
+
+            }
+            if (tempCurrPage.length < 10) {
+
+                setMatchLevel(state => ({ ...state, count: state.count + 1 }));
+                setPageIndex(state => ({ ...state, count: -1 }));
+                setPageIndex(0);
+                setLoadingspinner(false)
+            }
+            setLoadingspinner(false)
+            setPageIndex(state => ({ ...state, count: state.count + 1 }));
+
+        }
 
 
-}
 
 
+
+
+
+
+
+
+
+
+    }
+
+    const showmoresearchResultEveryOne = async () => {
+        setLoadingspinner(true)
+
+        const response = await Http.get('search-view', {
+            params: {
+                meet: props.navigation.state.params.meet,
+                activity: props.navigation.state.params.activity[0].value,
+                page: pageIndex.count
+
+            }
+        }
+
+        );
+
+
+        if (response.data.length == 0) {
+            setLoadingspinner(false)
+            setVisible(true)
+            setResult(false)
+
+        }
+        else {
+
+            setLoadingspinner(false)
+            setResult(true)
+
+            var tempCurrPage = Object.keys(response.data).map((i) => response.data[i]);
+
+            var newTempCurrPage = tempCurrPage;
+            if (tempCurrPage.length > 0) {
+
+                AsyncStorage.getItem('Token', (err, result) => {
+                    const LogoutToken = JSON.parse(result)
+                    Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((responses) => {
+                        if (responses.data.field_block_users.length == undefined) {
+                            const User = JSON.parse(responses.data.field_block_users.und[0].value)
+                            var results = [];
+                            for (let userObj of User) {
+                                // Blocked User Uid Coneverted into array
+                                if (userObj != undefined) {
+                                    //Converted Into Array
+                                    results = results.concat(userObj.uid)
+                                }
+                            }
+                            //Compairing Result Uid with Blocked User Uid
+                            const newObject = tempCurrPage.filter(function (obj) { return !results.includes(obj.Uid); });
+                            console.log(newObject)
+                            setBlocking(state => ({ ...state, items: blocking.items.concat(newObject) }));
+
+
+                        }
+
+                        if (responses.data.field_block_users.length != undefined) {
+                            setBlocking(state => ({ ...state, items: blocking.items.concat(newTempCurrPage) }));
+
+                        }
+                    })
+
+
+                })
+
+
+
+
+
+
+            }
+            if (tempCurrPage.length < 10) {
+
+                setMatchLevel(state => ({ ...state, count: state.count + 1 }));
+                setPageIndex(state => ({ ...state, count: -1 }));
+                setPageIndex(0);
+                setLoadingspinner(false)
+            }
+            setLoadingspinner(false)
+            setPageIndex(state => ({ ...state, count: state.count + 1 }));
+
+        }
+
+
+    }
+
+
+
+
+    const UserDetails = () =>{
+        if(props.navigation.state.params.gender == "null")
+        {
+          showmoresearchResultEveryOne()
+         
+        }
+        if(props.navigation.state.params.gender != "null")
+        {
+            getAlluser ()
+        }
+    }
 
     if (!fontsLoaded) {
         return (<AppLoading />)
@@ -109,204 +260,241 @@ const getUser = () =>{
 
         return (
 
-<View style={{flex:1}}>
-<Spinner
-          visible={Loadingspinner}
-          textContent={'Loading...'}
-          textStyle={styles.spinnerTextStyle}
-          overlayColor={"#000000c2"}
-        />
-
-
-            <SafeAreaView style={styles.container}>
-
-
-                <FlatList
-                    data={blocking}
-                    renderItem={({ item }) => {
-
-
-
-                        const result = item.Birth.toString().replace(/(<([^>]+)>)/ig, '').slice(0, 2)
-
-                        if (item.avatar == 0 && result >= props.minage && result <= props.Maxage && item.verfied.length == undefined) {
-
-                            var active = item.Activities.join(', ')
-
-                            const result = item.Birth.toString().replace(/(<([^>]+)>)/ig, '').slice(0, 2)
-
-                            const singleActivity = item.Activities[0].toString().split(' ').slice(0, 1).join(' ')
-                            if (item.kids.length > 0) {
-                                var Parent = "Parent"
-                            }
-                            if (item.Pets.length > 0) {
-                                var Pets = 'Pet Owner'
-                            }
-                            if (item.kids.length > 0 && item.Pets.length > 0) {
-                                var Com = ","
-                            }
-
-
-
-                            return (
-                                <View style={{ flex: 1, backgroundColor: "white", marginTop: 10 }} >
-                                    <View style={styles.scrollView}>
-                                        <TouchableWithoutFeedback onPress={() => props.navigation.navigation.navigation.navigate('FindUserDetails', {
-                                            uid: item.Uid
-                                        })}
-                                        >    <View>
-                                                <View style={styles.Verified}><Text style={{ color: "white", textAlign: "center", fontFamily: "Montserrat_600SemiBold_Italic", paddingTop: 1 }}>Verified</Text></View>
-                                                <View style={styles.VeifiedmainContainer} >
-
-                                                    <View style={styles.Image}>
-                                                        <Image
-                                                            style={styles.tinyLogo}
-                                                            source={{ uri: item.Picture[0] }}
-                                                            PlaceholderContent={<ActivityIndicator />}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.textContainer}>
-                                                        <View styles={styles.UpperText}>
-                                                            <View>
-                                                                <Text style={styles.nameText}>{item.name}</Text>
-                                                            </View>
-                                                            <View>
-                                                                <Text style={styles.AgeText}>{result}, {item.Gender}</Text>
-                                                            </View>
-                                                            <View>
-                                                                <Text style={styles.parentText}>{Parent}{Com} {Pets}</Text>
-                                                            </View>
-                                                        </View>
-
-                                                        <View style={styles.LoweText}>
-                                                            <View>
-                                                                <Text style={styles.activityText} numberOfLines={2}>Likes {active}</Text>
-
-                                                            </View>
-
-                                                            <View style={styles.InterestedContainer}>
-                                                                <Text style={styles.oneLineActivity} >Interested in {singleActivity}</Text>
-
-                                                            </View>
-                                                        </View>
-                                                    </View>
-
-
-
-
-                                                </View>
-                                            </View>
-                                        </TouchableWithoutFeedback>
-
-
-                                    </View>
-
-
-                                </View>
-
-
-                            )
-                        }
-
-
-                        else if (item.avatar == 0 && result >= props.minage && result <= props.Maxage && item.verfied.length != undefined) {
-
-
-
-                            var active = item.Activities.join(', ')
-
-                            const result = item.Birth.toString().replace(/(<([^>]+)>)/ig, '').slice(0, 2)
-
-                            const singleActivity = item.Activities[0].toString().split(' ').slice(0, 1).join(' ')
-                            if (item.kids.length > 0) {
-                                var Parent = "Parent"
-                            }
-                            if (item.Pets.length > 0) {
-                                var Pets = 'Pet Owner'
-                            }
-                            if (item.kids.length > 0 && item.Pets.length > 0) {
-                                var Com = ","
-                            }
-                            //.replace( /(<([^>]+)>)/ig, '')
-                            return (
-                                <View style={{ flex: 1, backgroundColor: "white", marginTop: 10 }} >
-                                    <View style={styles.scrollView}>
-                                        <TouchableWithoutFeedback onPress={() => props.navigation.navigation.navigation.navigate('FindUserDetails', {
-                                            uid: item.Uid
-                                        })} activeOpacity="0.1">
-                                            <View>
-                                                <View style={styles.notVerified}></View>
-                                                <View style={styles.mainContainer} >
-
-                                                    <View style={styles.Image}>
-                                                        <Image
-                                                            style={styles.tinyLogo}
-                                                            source={{ uri: item.Picture[0] }}
-                                                            PlaceholderContent={<ActivityIndicator />}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.textContainer}>
-                                                        <View styles={styles.UpperText}>
-                                                            <View>
-                                                                <Text style={styles.nameText}>{item.name}</Text>
-                                                            </View>
-                                                            <View>
-                                                                <Text style={styles.AgeText}>{result}, {item.Gender}</Text>
-                                                            </View>
-                                                            <View>
-                                                                <Text style={styles.parentText}>{Parent}{Com} {Pets}</Text>
-                                                            </View>
-                                                        </View>
-
-                                                        <View style={styles.LoweText}>
-                                                            <View>
-                                                                <Text style={styles.activityText} numberOfLines={2}>Likes {active}</Text>
-
-                                                            </View>
-
-                                                            <View style={styles.InterestedContainer}>
-                                                                <Text style={styles.oneLineActivity} >Interested in {singleActivity}</Text>
-
-                                                            </View>
-                                                        </View>
-                                                    </View>
-
-
-
-
-                                                </View>
-                                            </View>
-                                        </ TouchableWithoutFeedback >
-
-
-                                    </View>
-
-
-                                </View>
-
-
-                            )
-                        }
-
-                        else {
-                            <View style={{ flex: 2, backgroundColor: "white", justifyContent: "center" }}>
-                                <Text style={{ fontFamily: 'Montserrat_500Medium', color: 'black', fontSize: 20 }}>No Result Found</Text>
-                            </View>
-                        }
-
-                    }}
-                    keyExtractor={(item, index) => index}
+            <View style={{ flex: 1 }}>
+                <Spinner
+                    visible={Loadingspinner}
+                    textContent={'Loading...'}
+                    textStyle={styles.spinnerTextStyle}
+                    overlayColor={"#000000c2"}
                 />
 
 
-            </SafeAreaView >
+                <SafeAreaView style={styles.container}>
+
+
+                    <FlatList
+                        data={blocking.items}
+                        renderItem={({ item }) => {
+
+
+
+                            const result = item.Birth.toString().replace(/(<([^>]+)>)/ig, '').slice(0, 2)
+
+                            if (item.avatar == 0 && result >= props.navigation.state.params.minage && result <= props.navigation.state.params.Maxage && item.verfied.length == undefined) {
+
+                                var active = item.Activities.join(', ')
+
+                                const result = item.Birth.toString().replace(/(<([^>]+)>)/ig, '').slice(0, 2)
+
+                                const singleActivity = item.Activities[0].toString().split(' ').slice(0, 1).join(' ')
+                                
+                                if (item.kids.length == "No" || item.kids.length == "Yes") {
+                                    var Parent = "Parent"
+                                }
+                                if (item.Pets.length > 0) {
+                                    var Pets = 'Pet Owner'
+                                }
+                                if (item.kids.length == "No" || item.kids.length == "Yes" && item.Pets.length > 0) {
+                                    var Com = ","
+                                }
+
+
+
+                                return (
+                                    <View style={{ flex: 1, backgroundColor: "white", marginTop: 10 }} >
+                                        <View style={styles.scrollView}>
+                                            <TouchableWithoutFeedback onPress={() => props.navigation.navigate('FindUserDetails', {
+                                                uid: item.Uid
+                                            })}
+                                            >
+                                                <View>
+                                                    <View style={styles.Verified}><Text style={{ color: "white", textAlign: "center", fontFamily: "Montserrat_600SemiBold_Italic", paddingTop: 1 }}>Verified</Text></View>
+                                                    <View style={styles.VeifiedmainContainer} >
+
+                                                        <View style={styles.Image}>
+                                                            <Image
+                                                                style={styles.tinyLogo}
+                                                                source={{ uri: item.Picture[0] }}
+                                                                PlaceholderContent={<ActivityIndicator />}
+                                                            />
+                                                        </View>
+                                                        <View style={styles.textContainer}>
+                                                            <View styles={styles.UpperText}>
+                                                                <View>
+                                                                    <Text style={styles.nameText}>{item.name}</Text>
+                                                                </View>
+                                                                <View>
+                                                                    <Text style={styles.AgeText}>{result}, {item.Gender}</Text>
+                                                                </View>
+                                                                <View>
+                                                                    <Text style={styles.parentText}>{Parent}{Com} {Pets}</Text>
+                                                                </View>
+                                                            </View>
+
+                                                            <View style={styles.LoweText}>
+                                                                <View>
+                                                                    <Text style={styles.activityText} numberOfLines={2}>Likes {active}</Text>
+
+                                                                </View>
+
+                                                                <View style={styles.InterestedContainer}>
+                                                                    <Text style={styles.oneLineActivity} >Interested in {singleActivity}</Text>
+
+                                                                </View>
+                                                            </View>
+                                                        </View>
+
+
+
+
+                                                    </View>
+                                                </View>
+                                            </TouchableWithoutFeedback>
+
+
+                                        </View>
+
+
+                                    </View>
+
+
+                                )
+                            }
+
+
+                            else if (item.avatar == 0 && result >= props.navigation.state.params.minage && result <= props.navigation.state.params.Maxage && item.verfied.length != undefined) {
+
+
+
+                                var active = item.Activities.join(', ')
+
+                                const result = item.Birth.toString().replace(/(<([^>]+)>)/ig, '').slice(0, 2)
+
+                                const singleActivity = item.Activities[0].toString().split(' ').slice(0, 1).join(' ')
+                                console.log(item.kids)
+                                if ( item.kids == "Yes") {
+                                    var Parent = "Parent"
+                                }
+                                if (item.Pets.length > 0) {
+                                    var Pets = 'Pet Owner'
+                                }
+                                if (item.kids == "Yes"  && item.Pets.length > 0) {
+                                    var Com = ","
+                                }
+                                //.replace( /(<([^>]+)>)/ig, '')
+                                return (
+                                    <View style={{ flex: 1, backgroundColor: "white", marginTop: 10 }} >
+                                        <View style={styles.scrollView}>
+                                            <TouchableWithoutFeedback onPress={() => props.navigation.navigate('FindUserDetails', {
+                                                uid: item.Uid
+                                            })} activeOpacity="0.1">
+                                                <View>
+                                                    <View style={styles.notVerified}></View>
+                                                    <View style={styles.mainContainer} >
+
+                                                        <View style={styles.Image}>
+                                                            <Image
+                                                                style={styles.tinyLogo}
+                                                                source={{ uri: item.Picture[0] }}
+                                                                PlaceholderContent={<ActivityIndicator />}
+                                                            />
+                                                        </View>
+                                                        <View style={styles.textContainer}>
+                                                            <View styles={styles.UpperText}>
+                                                                <View>
+                                                                    <Text style={styles.nameText}>{item.name}</Text>
+                                                                </View>
+                                                                <View>
+                                                                    <Text style={styles.AgeText}>{result}, {item.Gender}</Text>
+                                                                </View>
+                                                                <View>
+                                                                    <Text style={styles.parentText}>{Parent}{Com} {Pets} </Text>
+                                                                </View>
+                                                            </View>
+
+                                                            <View style={styles.LoweText}>
+                                                                <View>
+                                                                    <Text style={styles.activityText} numberOfLines={2}>Likes {active}</Text>
+
+                                                                </View>
+
+                                                                <View style={styles.InterestedContainer}>
+                                                                    <Text style={styles.oneLineActivity} >Interested in {singleActivity}</Text>
+
+                                                                </View>
+                                                            </View>
+                                                        </View>
+
+
+
+
+                                                    </View>
+                                                </View>
+                                            </ TouchableWithoutFeedback >
+
+
+                                        </View>
+
+                                    </View>
+
+
+                                )
+                            }
+
+                            else {
+                                <View style={{ flex: 2, backgroundColor: "white", justifyContent: "center" }}>
+                                    <Text style={{ fontFamily: 'Montserrat_500Medium', color: 'black', fontSize: 20 }}>No Result Found</Text>
+                                </View>
+                            }
+
+                        }}
+                        keyExtractor={(item, index) => index}
+                    />
+
+
+                    {result ? (
+                        <View >
+                            <Button title="Show more"
+                                onPress={UserDetails}
+                                containerStyle={{ marginVertical: 20 }}
+                                buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
+                                titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 20 }}
+                                containerStyle={{ width: "100%" }} />
+                            <View style={{ height: 10 }}></View>
+                            <Button title="Back"
+                                onPress={() => props.navigation.goBack()}
+                                containerStyle={{ marginVertical: 20 }}
+                                buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
+                                titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 20 }}
+                                containerStyle={{ width: "100%" }} />
+                            <View style={{ height: 10 }}></View>
+                        </View>
+                    ) : null}
+                </SafeAreaView >
+                <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+                    <View style={{ marginHorizontal: 20, paddingVertical: 20 }}>
+                        <View>
+                            <Text style={{
+                                fontFamily: "Cairo_700Bold",
+                                fontSize: 18, paddingVertical: 10, paddingHorizontal: 20
+                            }}>No Result Found</Text>
+                        </View>
+                        <View style={{
+                            fontFamily: "Cairo_700Bold",
+                            fontSize: 18, paddingVertical: 10
+                        }}>
+                            <Button title="ok" onPress={toggleOverlay} containerStyle={{ marginHorizontal: 20 }} />
+                        </View>
+                    </View>
+                </Overlay>
+
             </View>
         )
 
 
 
 
-  
+
 
 
 
@@ -505,22 +693,22 @@ const styles = StyleSheet.create({
     OverLayColor: {
         position: "absolute",
         top: 0,
-      
+
         alignItems: "center",
         height: "100%",
         backgroundColor: "#000000c7",
         zIndex: 10,
         width: "100%",
         justifyContent: "center"
-      },
-      ImageStyle: {
+    },
+    ImageStyle: {
         height: 320,
         width: 280,
         zIndex: 2
-      },
-      spinnerTextStyle:{
-          color:"white"
-      }
+    },
+    spinnerTextStyle: {
+        color: "white"
+    }
 
 
 });

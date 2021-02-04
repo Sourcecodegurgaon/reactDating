@@ -36,7 +36,8 @@ import Navigatetoscreen from './src/Navigation/NavigateToScreen'
 import NotFoundUser from "./src/screens/Welcome Screen/Components/NotFoundUser"
 import FindUserDetails from "./src/screens/Details/FindUserDetails"
 import Toutorial from "./src/screens/Chat/Toutorial"
-import PayPalExpressCheckOut from "./src/screens/Payment/PayPalExpressCheckOut"
+import PayPalExpressCheckOut from "./src/screens/Payment/PayPalExpressCheckOut";
+import Payment  from "./src/screens/SignIn/Payment"
 const MyHeader = (navigation) => {
   return {
       header: props => <Navigationbar {...props} />,
@@ -62,7 +63,7 @@ const navigator = createStackNavigator(
     Forgotpassword:Forgotpassword,
     Optionaldetail:Optionaldetail,
     Tophobbies:Tophobbies,
-    SearchItems:{ screen : SearchItems},
+    SearchItems:SearchItems,
     Tabs:Tabs,
     UserDetails:UserDetails,
     Personalchat :Personalchat,
@@ -82,7 +83,8 @@ const navigator = createStackNavigator(
     NotFoundUser :NotFoundUser ,
     FindUserDetails:FindUserDetails,
     Toutorial:Toutorial,
-    PayPalExpressCheckOut:PayPalExpressCheckOut
+    PayPalExpressCheckOut:PayPalExpressCheckOut,
+    Payment:Payment
   },
 
   {

@@ -69,8 +69,8 @@ const Personalchat = (props) => {
             const UserDetail = JSON.parse(result)
             setUserId(UserDetail.data.user.uid)
             Http.get('privatemsg/' + navigation.state.params.threadId, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((responses) => {
+                console.log(responses)
                 const userSendMessages = responses.data.messages;
-                console.log(responses.data)
                 setUserSend(userSendMessages)
                 setpmtid(responses.data.pmtid)
                 setSpinner(false)
@@ -78,9 +78,7 @@ const Personalchat = (props) => {
                 handleClick()
             })
         })
-        // _scrollEnd = (evt) => {
-        //     flatList1.scrollToEnd();
-        //   }
+
     }
 
 
@@ -123,7 +121,7 @@ const Personalchat = (props) => {
             <TouchableOpacity onPress={()=> navigation.goBack()}>
                 <View style={{ flexDirection: "row", alignItems: "center" , marginLeft:15}}>
 
-                    {/* <Ionicons name="md-arrow-round-back" size={24} color="black" style={{ marginLeft: 10 }} /> */}
+                    <Ionicons name="md-arrow-round-back" size={24} color="black" style={{ marginLeft: 10 }} />
 
                     <Image
                       source={{ uri: navigation.state.params.picture}}

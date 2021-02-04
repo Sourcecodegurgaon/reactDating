@@ -9,21 +9,22 @@ import Moment from 'moment';
 import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold} from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight} from '@expo-google-fonts/montserrat';
-
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const Chats = (props) => {
-
+const [chats,Setarea] = useState()
+const [spinner,setspinner] = useState()
 
     useEffect(() => {
         getchats()  
-        props.navigation.navigation.addListener('didFocus', () => {        
-            getchats()            
-        });
+  
       
     }, [])
 
 
     const getchats = () =>{
+
+        setspinner(true)
         AsyncStorage.getItem('Token', (err, result) => {
             const LogoutToken = JSON.parse(result)
             if (LogoutToken != null) {
@@ -33,11 +34,14 @@ const Chats = (props) => {
                   if(LogoutToken.data.user.field_tutorial.length != undefined)
                   {
                     //props.navigation.navigation.navigate('Chats')
-                    props.navigation.navigation.navigate('Toutorial')
+                    //props.navigation.navigation.navigate('Toutorial')
+                    setspinner(false)
                   }
                   else
                   {
-                    props.navigation.navigation.navigate('Chats')
+                    
+                    setspinner(false)
+                    //props.navigation.navigation.navigate('Chats')
 
                   }
 
@@ -66,7 +70,12 @@ const Chats = (props) => {
     return (
         <View style={styles.mainContainer}>
 
-
+<Spinner
+          visible={spinner}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+          overlayColor={"#000000c2"}
+        />
 
 
             <View style={styles.secondContainer}>
@@ -74,21 +83,18 @@ const Chats = (props) => {
                 <FlatList
                 
                     data={props.chatmessage}
-                    keyExtractor={item => item.thread_id}
+                 
                     refreshing={true}
                     renderItem={({ item }) => {
 
+                      
                         const PictureUrl = "http://gowebtutorial.com/sites/default/files/" + item.picture.filename
                        //Time Stamp to Date
                         var t = new Date();
-                        console.log( t.setSeconds( item.time ))
                         t.setSeconds( item.time );
                         const formatted =  Moment(t).format('DD MMMM')
                         var newDate = Moment(new Date(item.time * 1000)).format('DD MMMM');
                         var d = new Date(t.setSeconds( item.time ));
-           
-
-              
                         return (
                             <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
    
@@ -101,7 +107,6 @@ const Chats = (props) => {
                                     <View style={styles.mainContainerOutput}>
 
                                         <View style={styles.Image}>
-
                                             <Image
                                                 style={styles.tinyLogo}
                                                 source={{ uri: PictureUrl }}
@@ -123,6 +128,7 @@ const Chats = (props) => {
                         )
 
                     }}
+                    keyExtractor={item => item.thread_id}
                 />
 
 
@@ -200,6 +206,9 @@ zIndex:200,
 right:0,
 left:0,
 bottom:0
+    },
+    spinnerTextStyle:{
+        color:"white"
     }
 
 });

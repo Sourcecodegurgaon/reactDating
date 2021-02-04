@@ -16,7 +16,7 @@ const NewChat = props => {
     const [Message, setMessage] = useState()
           //Spinner
           const [spinner ,setspinner] = useState(false)
-
+console.log(props.navigation.state.params)
 
 
     let [fontsLoaded] = useFonts({
@@ -43,9 +43,19 @@ const NewChat = props => {
                 body:Message
             }, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((responses) => {
                 const userSendMessages = responses.data.messages;
+                console.log(responses)
                 setspinner(false)
-                props.navigation.navigate("Tabs")
-            })
+                props.navigation.navigate('Personalchat',{
+                    threadId:responses.data.pmtid,
+                    Name:props.navigation.state.params.Name,
+                    picture:props.navigation.state.params.Picture,
+                    Uid:props.navigation.state.params.Name.uid
+                })
+            }).catch(function (error) {
+                setspinner(false)
+    console.log(error.response)
+               
+            });
         })
     }
     const CheckNav = () =>{

@@ -14,6 +14,7 @@ import { Montserrat_400Regular} from '@expo-google-fonts/montserrat';
 import CustomMultiPicker from "react-native-multiple-select-list";
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import { Overlay } from 'react-native-elements';
 const Tophobbies = (props) => {
     const [selectedItems, setSelectedItems] = useState([]);
 
@@ -28,7 +29,7 @@ const Tophobbies = (props) => {
       //Spinner
       const [spinner ,setspinner] = useState(false)
   
-  
+      const [visible, setvisible] = useState(false)
 
     const items = [
         // this is the parent or 'item'
@@ -133,7 +134,10 @@ const Tophobbies = (props) => {
       ];
       
 
- 
+      const toggleOverlay = () => {
+        setvisible(!visible);
+       
+    };
 
 
     const onSelectedItemsChange = (selectedItems) => {
@@ -147,6 +151,13 @@ const Tophobbies = (props) => {
     };
 
     const SubmitDetails = () =>{
+
+      if(selectedItems.length != 3)
+      {
+        setvisible(true)
+      }
+      else
+      {
         setspinner(true)
         AsyncStorage.getItem('Token', (err, result) => {
             const UserDetail= JSON.parse(result)
@@ -178,7 +189,7 @@ const Tophobbies = (props) => {
    
 
 
-
+        }
 
     }
 
@@ -301,7 +312,12 @@ const Tophobbies = (props) => {
 
 
             </View>
-
+            <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+                    <>
+                        <Text style={styles.errorText}>Please Select 3 Activities and Interest</Text>
+                        <Button title="Ok" containerStyle={styles.buttoncontainerStyle} buttonStyle={styles.successButton} titleStyle={styles.tittleText} onPress={toggleOverlay} />
+                    </>
+                </Overlay>
         </View>
 
 
@@ -373,7 +389,25 @@ const styles = StyleSheet.create({
     },
     spinnerTextStyle:{
       color:"white"
-    }
+    },
+    buttoncontainerStyle: {
+      marginVertical: 10,
+      marginHorizontal: 10
+  
+  },
+  errorText:{
+      fontFamily: "Cairo_700Bold",
+   fontSize: 18
+  },
+  successButton: {
+    backgroundColor: "#28A745"
+},
+tittleText: {
+    fontFamily: "Cairo_700Bold",
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    fontSize: 16
+},
 
 
 })

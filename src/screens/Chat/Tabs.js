@@ -91,15 +91,18 @@ function SettingsScreen (props) {
                    meassages[i].participants[participants].subject = meassages[i].subject;
                    meassages[i].participants[participants].time=meassages[i].last_updated;
                    meassages[i].participants[participants].thread_id = meassages[i].thread_id;
-                  ParseFavorate.push(meassages[i].participants[participants]);          
-                  chatMessages(ParseFavorate)
-                  setspinner(false)
+                  ParseFavorate.push(meassages[i].participants[participants]);  
+                    
+
+               
                 
                  
                   }  
                       
-                }       
-
+                }  
+                removeDuplicatesBy(ParseFavorate)     
+          
+                setspinner(false)
                   
                   } 
 
@@ -111,13 +114,26 @@ function SettingsScreen (props) {
       })  
     }
    const removeDuplicatesBy = (keyFn, array)=>{
-      var mySet = new Set();
-      return array.filter(function (x) {
-        var key = keyFn(x),
-          isNew = !mySet.has(key);
-        if (isNew) mySet.add(key);
-        return isNew;
-      });
+
+     const newArrayList = [];
+     keyFn.forEach(obj => {
+    
+      if (!newArrayList.some(o => o.uid === obj.uid)) {
+  
+       newArrayList.push({...obj});
+        }
+
+     });
+
+  chatMessages(newArrayList)
+     //this.setState({demoList: newArrayList})
+      //var mySet = new Set();
+       //return array.filter(function (x) {
+      //   var key = keyFn(x),
+      //     isNew = !mySet.has(key);
+      //   if (isNew) mySet.add(key);
+      //   return isNew;
+      // });
     }
   
     if(!fontsLoaded)
@@ -128,12 +144,7 @@ function SettingsScreen (props) {
  
   return (
     <View style={{flex:1}}>
-    <Spinner
-          visible={spinner}
-          textContent={'Loading Chats...'}
-          textStyle={styles.spinnerTextStyle}
-          overlayColor={"#000000c2"}
-        />
+ 
     <Chats chatmessage={chatmessage} navigation={props.propName.prop}/>
     </View>
 

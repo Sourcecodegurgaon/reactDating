@@ -15,7 +15,7 @@ const Favorate = (props) => {
 
     const [search, setSearch] = useState("")
     const [activityValue, setactivity] = useState("")
-    const [active, setactive] = useState("")
+    const [active, setactive] = useState()
     const [spinner,setSpinner] = useState(false)
  
     
@@ -62,13 +62,9 @@ const getFavorite =() =>{
                             }
                               //Compairing Result Uid with Blocked User Uid
                               const listFavorate = response.data.field_favorite_users.und[0].value;
-                        const ParseFavorate = JSON.parse(listFavorate);
-                        const uniqueFavorite = ParseFavorate
-                        
-                    
+                              const ParseFavorate = JSON.parse(listFavorate);
+                              const uniqueFavorite = ParseFavorate
                               var newObject = uniqueFavorite.filter(function (obj) { return !results.includes(obj.uid);});
-                           
-
                               setSearch(newObject)
                               setSpinner(false)
                   
@@ -143,16 +139,24 @@ const getFavorite =() =>{
             renderItem={({ item }) => {
                 var active = item.activities
                 const singleActivity = item.activities[0].value.toString().split(' ').slice(0, 1).join(' ')
-                if (item.Kids.length != undefined) {
+                console.log(item.Kids.length)
+                if ( item.Kids == "Yes") {
                     var Parent = "Parent"
                 }
                 if (item.Pets.length != undefined) {
                     var Pets = 'Pet Owner'
                 }
-                if (item.Kids.length != undefined && item.Pets.length != undefined) {
+                if ( item.Kids == "Yes" && item.Pets.length != undefined) {
                     var Com = ","
                 }
-                //.replace( /(<([^>]+)>)/ig, '')
+
+                var ActivityArray = []
+                const ActivitUser = active
+                for(let userObj of ActivitUser)
+                {
+                    ActivityArray = ActivityArray.concat(userObj.value)
+                }
+             
                 return (
                     <View style={{ flex: 2, backgroundColor: "white", marginTop: 10 }} >
                         <View style={styles.scrollView}>
@@ -183,7 +187,7 @@ const getFavorite =() =>{
 
                                         <View style={styles.LoweText}>
                                             <View>
-                                                <Text style={styles.activityText} numberOfLines={2}>Likes {active[0].value}, {active[1].value}</Text>
+                                                <Text style={styles.activityText} numberOfLines={2}>Likes {ActivityArray} </Text>
 
                                             </View>
 

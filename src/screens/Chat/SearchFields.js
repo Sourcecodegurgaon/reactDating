@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, Dimensions, SafeAreaView, ScrollView, Image, TextInput, TouchableOpacity } from "react-native";
 import { Button } from 'react-native-elements';
-import SearchItems from './SearchItems'
+
 import Http from '../../Api/Http'
 import { useNavigation } from '@react-navigation/native';
 import { AsyncStorage } from 'react-native';
@@ -228,23 +228,16 @@ const [searchPostcode, setSearchPostcode] = useState({ items: []});
 
   const userSearch = () =>
   {
-
-    if(genderValue == "null")
-    {
-      showmoresearchResultEveryOne()
-     
-    }
-    if(genderValue != "null")
-    {
-      showmoresearchResult()
-    }
+    showmoresearchResult()
+    
   }
   
 
   const showmoresearchResult = async () => {
+ console.log(selectedItems.length)
     //const postcode = post.substring(0,post.length - matchLevel.count)        
     // Note used postcode value
-    if( Minage == null || Maxage == null || looking == null)
+    if( Minage == null || Maxage == null || selectedItems.length == 0)
     {
       setVisible(true)
       setMessage("Please fill all fields")
@@ -256,7 +249,6 @@ const [searchPostcode, setSearchPostcode] = useState({ items: []});
       setspinner(true)
       const response = await Http.get('search-view',{
         params: {
-          gender: genderValue,
           meet:looking,
           activity:selectedItems,
           page:pageIndex.count
@@ -277,12 +269,14 @@ const [searchPostcode, setSearchPostcode] = useState({ items: []});
       {
         //setSearch(response.data)
         setspinner(false)
-        setoutput(true)
-        setSearchField(false)
+        // setoutput(true)
+        // setSearchField(false)
+
+        props.navigation.navigation.navigate('SearchItems',{ minage:Minage  ,Maxage:Maxage , gender:genderValue, meet:looking, activity:selectedItems})
         var tempCurrPage = Object.keys(response.data).map((i) => response.data[i]);
         var newTempCurrPage = tempCurrPage;
         if (tempCurrPage.length > 0) {
-          setSearch(state => ({...state,items:searchResults.items.concat(newTempCurrPage)}));
+          // setSearch(state => ({...state,items:searchResults.items.concat(newTempCurrPage)}));
      
       
 
@@ -291,7 +285,7 @@ const [searchPostcode, setSearchPostcode] = useState({ items: []});
           //                 items: searchResults.items.concat(newTempCurrPage)
           // }));
 
-    
+     
 
           setspinner(false)
       }
@@ -348,6 +342,7 @@ const [searchPostcode, setSearchPostcode] = useState({ items: []});
       }
       else
       {
+        props.navigation.navigation.navigate('SearchItems',{ minage:Minage  ,Maxage:Maxage , gender:genderValue, meet:looking, activity:selectedItems})
         setSearch(responses.data)
         setspinner(false)
         setoutput(true)
@@ -365,6 +360,8 @@ const [searchPostcode, setSearchPostcode] = useState({ items: []});
           //         index === self.findIndex((t) => t.name === thing.name)
           //     ))
 
+
+         
           setspinner(false)
       }
       if (tempCurrPage.length < 10) {          
@@ -751,25 +748,7 @@ const [searchPostcode, setSearchPostcode] = useState({ items: []});
 
               {/*Search Fields area End */}
               {/*Search Result area start */}
-              {output ? (
-                <View style={{ flex: 3 }}>
-                  <SearchItems searchResults={{New:searchResults.items,help:blockUser}} navigation={props} minage={Minage}  Maxage={Maxage}  />
-                  <Button title="Show more"
-                    onPress={userSearch}
-                    containerStyle={{ marginVertical: 20 }}
-                    buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
-                    titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 20 }}
-                    containerStyle={{ width: "100%" }} />
-                    <View style={{height:10}}></View>
-                  <Button title="Back"
-                    onPress={showSearchFields}
-                    containerStyle={{ marginVertical: 20 }}
-                    buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10, fontFamily: 'Cairo_700Bold' }}
-                    titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 20 }}
-                    containerStyle={{ width: "100%" }} />
-                     <View style={{height:10}}></View>
-                </View>
-              ) : null}
+           
  <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
    <View style={{marginHorizontal:20,paddingVertical:20}}>
      <View>

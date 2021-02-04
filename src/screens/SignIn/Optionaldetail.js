@@ -14,7 +14,7 @@ import Http from '../../Api/Http'
 import Spinner from 'react-native-loading-spinner-overlay';
 import * as ImagePicker from 'expo-image-picker';
 import { Entypo } from '@expo/vector-icons';
-import MultiSelect from 'react-native-multiple-select';
+//import MultiSelect from 'react-native-multiple-select';
 import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold } from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
@@ -24,7 +24,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
 import { Overlay } from 'react-native-elements';
-import { cos } from 'react-native-reanimated';
+
+
+
+
+
+
 
 
 
@@ -63,7 +68,7 @@ const Optionaldetail = (props) => {
     const [fifthItems,setfifthItems] = useState()
 
     
-
+    const [selected, setSelected] = useState([]);
 
     const FirstRoute = () => {
 
@@ -85,16 +90,17 @@ const Optionaldetail = (props) => {
     
         const [android, setAndroid] = useState(false)
         const [ios, setIos] = useState(false)
-        const [state, setState] = useState([])
+
          
         const [spinner, setspinner] = useState(false)
+        
         let [fontsLoaded] = useFonts({
             Cairo_700Bold,
             Montserrat_200ExtraLight,
             Montserrat_400Regular
         });
     
-    
+
     
         useEffect(() => {
             AsyncStorage.getItem('Token', (err, result) => {
@@ -107,7 +113,14 @@ const Optionaldetail = (props) => {
                             setCountry(response.data.field_zip_code.und[0].country)
                             setPostal(response.data.field_zip_code.und[0].postal_code)
                             if (response.data.field_do_for_fun.length == undefined) {
-                                setactivityValue(response.data.field_do_for_fun.und[0].value)
+                                var Array = []
+                                const ActivityUser = response.data.field_do_for_fun.und
+                                for(let userObj of ActivityUser)
+                                {
+                                   Array = Array.concat(userObj.value)
+                                }
+                                setactivityValue(Array)
+                            
                             }
                             if (response.data.field_long_in_city.length == undefined) {
                                 setliveValue(response.data.field_long_in_city.und[0].value)
@@ -178,7 +191,7 @@ const Optionaldetail = (props) => {
         }
     
     
-        const items = [
+        const item = [
             // this is the parent or 'item'
             {
               name: 'What do you like to do for fun?',
@@ -279,12 +292,125 @@ const Optionaldetail = (props) => {
     
           
           ];
-          
+          const items = [
+            // this is the parent or 'item'
+      
+            
+              // these are the children or 'sub items'
+             
+                {
+                  name: 'yoga',
+                  id: 'yoga',
+                },
+                {
+                  name: 'playdates (parents and children)',
+                  id: 'playdates (parents and children)',
+                },
+                {
+                  name: 'sightseeing',
+                  id: 'sightseeing',
+                },
+                {
+                  name: 'artsy stuff (making or looking at)',
+                  id: 'artsy stuff (making or looking at)',
+                },
+                {
+                  name: 'cooking',
+                  id: 'cooking',
+                },
+                {
+                  name: 'dancing',
+                  id: 'dancing',
+                },
+                {
+                    name: 'people watching',
+                    id: 'people watching',
+                  },
+                  {
+                    name: 'traveling/vacations',
+                    id: 'traveling/vacations',
+                  },
+                  {
+                    name: 'history buff',
+                    id: 'history buff',
+                  },
+                  {
+                    name: 'board games',
+                    id: 'board games',
+                  },
+                  {
+                    name: 'sports (playing)',
+                    id: 'sports (playing)',
+                  },
+                  {
+                    name: "mom's/dad's night out w/o kids",
+                    id: "mom's/dad's night out w/o kids",
+                  },
+                  {
+                    name: 'outdoor activities',
+                    id: 'outdoor activities',
+                  },
+                  {
+                    name: 'dining out',
+                    id: 'dining out',
+                  },
+                  {
+                    name: 'concerts/shows',
+                    id: 'concerts/shows',
+                  },
+                  {
+                    name: 'sports (watching)',
+                    id: 'sports (watching)',
+                  },
     
+                  {
+                    name: 'shopping',
+                    id: 'shopping',
+                  },
+    
+                  {
+                    name: 'video games',
+                    id: 'video games',
+                  },
+    
+                  {
+                    name: 'photography',
+                    id: 'photography',
+                  },
+                  {
+                    name: 'animal lover/pet owner',
+                    id: 'animal lover/pet owner',
+                  },
+                  {
+                    name: 'chess',
+                    id: 'chess',
+                  },
+    
+                
+              
+            
+    
+          
+          ];
+     
+         
+          
+      
+         var state = {
+            selectedItem :[],
+          }
+
+
         const onSelectedItemsChange = (activityValue) => {
+    
             // Set Selected Items
             setactivityValue(activityValue);
+
+
         };
+        const nextValue = () =>{
+            console.log(activityValue)
+        }
     
     
         if (!fontsLoaded) {
@@ -311,22 +437,32 @@ const Optionaldetail = (props) => {
                                 <Text style={styles.labelUnderText}>(Other than Top 3)</Text>
                                 <View style={{ marginHorizontal: 5, borderRadius: 5 ,borderWidth:1,height:50}}>
                                 <SectionedMultiSelect
-                                 items={items}
+                                 items={item}
                                  IconRenderer={Icon}
                                  uniqueKey="id"
                                  subKey="children"
+                                 //displayKey	= "name"
                                  showDropDowns={true}
                                  readOnlyHeadings={true}
                                  onSelectedItemsChange={onSelectedItemsChange}
                                  selectedItems={activityValue}
                                  hideSearch={false}
                                  expandDropDowns={true}
-                                 readOnlyHeadings={true}
-                                 selectChildren={true}
+        
+                        
                                  showChips={false}
+                          
+                           
                                
                                  />
+
+
+
                             </View>
+                       
+                         
+
+                    
                             </View>
     
     
@@ -591,14 +727,14 @@ const Optionaldetail = (props) => {
 
         const [CountryValue, setCountry] = useState("");
         const [Postalcode, setPostal] = useState("")
-        const [activityValue, setactivityValue] = useState();
+        //const [activityValue, setactivityValue] = useState();
         const [liveValue, setliveValue] = useState("");
         const [talkValue, settalkValue] = useState("");
         const [FriendValue, setFriendValue] = useState("");
         const [CancelValue, setCancelValue] = useState("")
         const [StatusValue, setStatusValue] = useState()
         const [KidsValue, setKidsValue] = useState("")
-        const [PetValue, setPetValue] = useState([])
+        const [PetValue, setPetValue] = useState()
         const [daysvalue, setdays] = useState("")
         const [spaekvalue, setspeak] = useState("")
         const [spinner,setspinner] = useState(false)
@@ -639,9 +775,9 @@ const Optionaldetail = (props) => {
                             setCountry(response.data.field_zip_code.und[0].country)
                             setPostal(response.data.field_zip_code.und[0].postal_code)
     
-                            if (response.data.field_do_for_fun.length == undefined) {
-                                setactivityValue(response.data.field_do_for_fun.und[0].value)
-                            }
+                            // if (response.data.field_do_for_fun.length == undefined) {
+                            //     setactivityValue(response.data.field_do_for_fun.und[0].value)
+                            // }
     
                             if (response.data.field_long_in_city.length == undefined) {
                                 setliveValue(response.data.field_long_in_city.und[0].value)
@@ -716,7 +852,15 @@ const Optionaldetail = (props) => {
                             }
      
                             if (response.data.field_any_pets.length == undefined) {
-                                setPetValue(response.data.field_any_pets.und[0].value)
+
+                                var PetArray = []
+                                const PetUser = response.data.field_any_pets.und
+                                console.log(PetUser)
+                                for(let userObj of PetUser)
+                                {
+                                    PetArray = PetArray.concat(userObj.value)
+                                }
+                                setPetValue(PetArray)
                             }
                   
                             if (response.data.field_spend_your_days.length == undefined) {
@@ -787,7 +931,7 @@ const Optionaldetail = (props) => {
                 setKidsOther(true)
                 setKidsValue()
             }
-            setPetValue(secondsItems.PetValue[0])
+            setPetValue(secondsItems.PetValue)
             setdays(secondsItems.daysvalue)
             setspeak(secondsItems.spaekvalue)
             }
@@ -1862,7 +2006,7 @@ const Optionaldetail = (props) => {
             Montserrat_400Regular
         });  
 
-        console.log(firstItems.CancelValue)
+        console.log(firstItems.activityValue)
     
 
   
@@ -1872,7 +2016,9 @@ const Optionaldetail = (props) => {
            
         };
         const changePage = () =>{
-        props.props.navigation.navigate('FindFriends',{userUpated: "true"})}
+         props.props.navigation.navigate('FindFriends',{userUpated: "true"})
+         setVisible(false);
+    }
         const pickImage = async () => {
     
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -1976,7 +2122,15 @@ const Optionaldetail = (props) => {
             {
                 firstItems.CancelValue 
             }
-            //setspinner(true)
+            if(firstItems.liveValue == undefined)
+            {  
+                firstItems.liveValue = []
+            }
+            else
+            {
+                firstItems.liveValue
+            }
+          
         
             AsyncStorage.getItem('Token', (err, result) => {
                 const UserDetail = JSON.parse(result)
@@ -1984,7 +2138,7 @@ const Optionaldetail = (props) => {
                 setspinner(true)
                 Http.put('user/' + userId, {
                      field_do_for_fun: {
-                        und: ["yoga"]
+                        und: firstItems.activityValue
                     },
                     field_long_in_city: {
                         und: firstItems.liveValue,
@@ -2007,7 +2161,7 @@ const Optionaldetail = (props) => {
                         und:secondsItems.KidsValue
                        },
                     field_any_pets: {
-                        und:["Dog"],
+                        und:secondsItems.PetValue,
                     },
                     field_spend_your_days: {
                         und: [
@@ -2418,6 +2572,10 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         marginHorizontal: 10
     
+    },
+    errorText:{
+        fontFamily: "Cairo_700Bold",
+     fontSize: 18
     }
 
 });

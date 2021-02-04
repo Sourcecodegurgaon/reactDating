@@ -21,29 +21,33 @@ const HomeScreen = props => {
  
   useEffect(() => {
 
-
-    AsyncStorage.getItem('Token', (err, result) => {
-      const UserDetail = JSON.parse(result)
-
-      if (UserDetail != null) {
-        setspinner(true)
-        Http.get('user/' + UserDetail.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
-
-          if (response.data.field_already_declared.und == undefined) {
-            setspinner(false)
-            props.navigation.navigate('Tophobbies')
-          }
-          else {
-            setspinner(false)
-            props.navigation.navigate('FindFriends',{userUpated: "false"})
-          }
-        })
-      }
-    })
+    props.navigation.addListener('didFocus', () => {        
+      UserCheck()               
+  });
+  
 
   }, [])
 
+const UserCheck = () =>{
+  AsyncStorage.getItem('Token', (err, result) => {
+    const UserDetail = JSON.parse(result)
 
+    if (UserDetail != null) {
+      setspinner(true)
+      Http.get('user/' + UserDetail.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
+
+        if (response.data.field_already_declared.und == undefined) {
+          setspinner(false)
+          props.navigation.navigate('Tophobbies')
+        }
+        else {
+          setspinner(false)
+          props.navigation.navigate('FindFriends',{userUpated: "false"})
+        }
+      })
+    }
+  })
+}
   if (!fontsLoaded) {
     return (<AppLoading />)
   }

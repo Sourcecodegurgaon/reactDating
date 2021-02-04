@@ -47,13 +47,11 @@ const SignIn = props => {
         AsyncStorage.getItem('Token', (err, result) => {
             const LogoutToken = JSON.parse(result)
             if (LogoutToken != null) {
-
                 Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
                     if (LogoutToken.data.user.field_trial_period_start_date.length == undefined) {
                         becomeCerified()
                     }
                 })
-
 
             }
         })
@@ -68,7 +66,6 @@ const SignIn = props => {
 
     const Login = () => {
         setspinner(true)
-
         //Login User Api
         axios.post('http://gowebtutorial.com/api/json/user/login', { username: user, password: pass }, {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
@@ -83,16 +80,16 @@ const SignIn = props => {
                 }).then((response) => {
                     if (response.status == 200) {
                         AsyncStorage.setItem('Connected', JSON.stringify(response))
-                       
                         Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
-                            console.log(response.data.field_trial_period_start_date.length)
-                            if (response.data.field_trial_period_start_date.length == undefined || response.data.field_trial_period_start_date.length != '0') {
-                                becomeCerified()
-                                setspinner(false)
-                            }
-                            else {
+                       
+                            if (response.data.field_trial_period_start_date.length == 0) {
                                 setspinner(false)
                                 props.navigation.navigate('Becomeverified')
+                                
+                            }
+                            else {
+                                becomeCerified()
+                                setspinner(false)
                                 //props.navigation.navigate('FindFriends')
                             }
                         })
@@ -104,7 +101,6 @@ const SignIn = props => {
              });
         }).catch(function (error) {
             setspinner(false)
-console.log(error.response)
             if (error.response.status) {
                 setspinner(false)
                 setVisible(true)
@@ -127,8 +123,7 @@ console.log(error.response)
           
             if (daysTill30June2035 > 8) {
                 setspinner(false)
-                props.navigation.navigate('FindFriends')
-                //props.navigation.navigate('TrialOver')
+                props.navigation.navigate('TrialOver')
             }
             else {
                 setspinner(false)

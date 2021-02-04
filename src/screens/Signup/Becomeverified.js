@@ -40,14 +40,14 @@ const Becomeverified = (props) => {
     }
         var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24));
       
-         if(daysTill30June2035 > 8)
-         {
-            props.navigation.navigate('Tabs')
-        }
-         else
-         {
-            props.navigation.navigate('FindFriends')
-         }
+        //  if(daysTill30June2035 > 8)
+        //  {
+        //     props.navigation.navigate('Tabs')
+        // }
+        //  else
+        //  {
+        //     props.navigation.navigate('FindFriends')
+        //  }
         });
       }
 
@@ -69,13 +69,13 @@ const Becomeverified = (props) => {
                         }
                     ]
                 },
-                field_verfied:   { 
-                    und: [
-                    {
-                      value: "true"
-                    }
-                  ]
-                }
+                // field_verfied:   { 
+                //     und: [
+                //     {
+                //       value: "true"
+                //     }
+                //   ]
+                // }
                 
             }, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
                 setspinner(false)
@@ -136,7 +136,7 @@ const Becomeverified = (props) => {
                         buttonStyle={{backgroundColor: "green", borderRadius: 10 }}
                         title="Become Verified"
                         titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 18 }}
-                        onPress={()=> props.navigation.navigate('TrialOver')}
+                        onPress={()=> props.navigation.navigate('Payment')}
                     
                     />
 

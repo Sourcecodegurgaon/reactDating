@@ -16,6 +16,7 @@ import { Entypo } from '@expo/vector-icons';
 import { Dimensions } from "react-native";
 
 
+
 const FindUserDetails = props => {
     const { navigation } = props;
     Dimensions.get("window");
@@ -95,14 +96,24 @@ const FindUserDetails = props => {
 
     const[alreadyBlocked,setalreadyBlocked] = useState(false)
     const[notBlocked,setnotBlocked] = useState(true)
-    const [message ,setMessage] = useState()
+    const [message ,setMessage] = useState() 
+    const [kids,setKids] = useState(false)
+    const [Nokid,setNoKid] = useState(false)
+    const [Yeskid,setYeskid] = useState(false)
+    const [PetParent,setPetApent] = useState(false)
+    const[children,setchildrenValue] = useState()
+const [Pet,setPet] = useState(false)
+const [petvalue,setPetvalue] = useState()
 
+
+const[music,setMusic] = useState(false)
+const[musicValue,setmusicValue] = useState()
     const FavorateOverlay = () => {
         setFavVisible(!Favvisible);
     };
     const AlreadyFav = () => {
         setalreadyFavVisisble(!alreadyFavVisisble);
-        setMessage("Already favorite")
+        setMessage("Already favorite! Want to Remove")
     };
 
     const AlreadyBlock = () => {
@@ -180,9 +191,16 @@ const FindUserDetails = props => {
 
                         const activityLength = response.data.field_activities_interests.und.length
                         for (let i = 0; i <= activityLength; i++) {
-                            if (response.data.field_activities_interests.und[i] != undefined) {
-                                setactivityValue(response.data.field_activities_interests.und[i].value)
-                            }
+                      
+                                var ActivityArray = []
+                                const ActivitUser = response.data.field_activities_interests.und
+                                for(let userObj of ActivitUser)
+                                {
+                                    ActivityArray = ActivityArray.concat(userObj.value)
+                                }
+                                 var Active = ActivityArray.join(", ");
+                                setactivityValue([Active ])
+                            
                         }
 
                     }
@@ -259,6 +277,10 @@ const FindUserDetails = props => {
                         setTvstatus(true)
                         setTV(response.data.field_favorite_tv_shows.und[0].value)
                     }
+                    if (response.data.field_favorite_music.length == undefined) {
+                        setMusic(true)
+                        setmusicValue(response.data.field_favorite_music.und[0].value)
+                    }
 
 
                     if (response.data.field_smoke.length == undefined) {
@@ -280,12 +302,81 @@ const FindUserDetails = props => {
                         setUnVerfied(false)
                     }
 
+                    if(response.data.field_kids.length == undefined)
+                    {
+                        if(response.data.field_kids.und[0].value == "No")
+                        {
+                            setNoKid(true)
+                        }
+                        if(response.data.field_kids.und[0].value == "Yes")
+                        {
+                            setYeskid(true)
+                        }
+                    }
+
+                   
+
+                    if(response.data.field_any_pets.length == undefined )
+                    {
+
+                  
+                      
+                      
+                                var PetArray = []
+                                const ActivitUser = response.data.field_any_pets.und
+                                for(let userObj of ActivitUser)
+                                {
+                                    PetArray = PetArray.concat(userObj.value)
+                                }
+                                 var PetActive = PetArray.join(", ");
+                                 Pet,setPet(true)
+                                 petvalue,setPetvalue(PetActive)
+                             
+                
+                            
+                        
+
+                    }
+
+                    if(response.data.field_any_pets.length == undefined && response.data.field_kids.length == undefined)
+                    {
+                        setPetApent(true)
+                        if(response.data.field_kids.und[0].value == "No")
+                        {
+                            setNoKid(false)
+                            setchildrenValue("I do not have")
+                           
+                        }
+                        if(response.data.field_kids.und[0].value == "Yes")
+                        {
+                            setYeskid(false)
+                            setchildrenValue("I have")
+                         
+                        }
+                  
+                                var PetArray = []
+                                const ActivitUser = response.data.field_any_pets.und
+                                for(let userObj of ActivitUser)
+                                {
+                                    PetArray = PetArray.concat(userObj.value)
+                                }
+                                 var PetActive = PetArray.join(", ");
+                                 setPet(false)
+                                 setPetvalue(PetActive)
+                             
+                
+                            
+                        
+
+                    }
 
                     setconvert(response.data.login)
                     const converting = response.data.login
                     const unixTime = converting;
-                    const dates = new Date(unixTime * 1000);
-                    setconverted(dates.toLocaleDateString("en-US"))
+                    //const dates = new Date(unixTime * 1000);
+              
+                    var dates = Moment(new Date(response.data.login * 1000)).format('DD/MM/YY');
+                    setconverted(dates )
 
                     setspinner(false)
 
@@ -348,9 +439,7 @@ const FindUserDetails = props => {
                                     console.log("This person is already a favorite");
                                     setnotFav(false)
                                     setalreadyFav(true)
- 
                                     setspinner(false)
-
                                     return 3;
                                 }  else
                                 {
@@ -359,11 +448,15 @@ const FindUserDetails = props => {
                               
                             }
                            
+                           
 
   
 
                         }
-
+                        else
+                        {
+                            setspinner(false)
+                        }
 
 
 
@@ -416,7 +509,6 @@ const FindUserDetails = props => {
         AsyncStorage.getItem('Token', (err, result) => {
             const UserDetail = JSON.parse(result)
             const responseString = JSON.stringify(scope);
-            console.log(responseString)
 
             Http.put('user/' + UserDetail.data.user.uid, {
                 field_favorite_users: {
@@ -444,7 +536,61 @@ const FindUserDetails = props => {
         });
     }
 
+    function removeFavorite() {
+        var uid = navigation.getParam('uid')
+        setspinner(true)
+        AsyncStorage.getItem('Token', (err, result) => {
+            const UserDetail = JSON.parse(result)
+            Http.get('user/' + UserDetail.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } })
+                .then((response) => {
+                    AsyncStorage.getItem('fav', (err, result) => {
+                       
+                    if (response.data.field_favorite_users.und) {
+                        console.log("value exists");
+                        let scope = JSON.parse(response.data.field_favorite_users["und"][0]["value"])
+                        scope = scope.filter((obj) => {
+                            return obj.uid !==  uid;
+                        
+                        });
+                        const responseString = JSON.stringify(scope);
+                        Http.put('user/' + UserDetail.data.user.uid, {
+                            field_favorite_users: {
+                                und: [
+                                    {
+                                        value: responseString,
+                                    },
+                                ],
+                            },
+                        }, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } })
+                            .then((response) => {
+                                console.log(response)
+                                setspinner(false)
+                                //checUserFavorites()
+                                setnotFav(true)
+                                setalreadyFav(false)
+                                AlreadyFav() 
+                                setFavVisible(false)
+                           
+                            })
+            
+                    
+                        
 
+                    } 
+
+                
+                  
+
+                    
+                 
+                  
+
+                });
+            })
+        });
+    
+      }
+    
 
 
 
@@ -460,7 +606,6 @@ const FindUserDetails = props => {
                         if (loggedUser.field_block_users.und) {
                             let parse = JSON.parse(loggedUser.field_block_users.und[0].value)
                             for (let userObject of parse) {
-                       
                                 if (uid == userObject.uid) {
                                     console.log("This person is already a blocked");
                                     setalreadyBlocked(true)
@@ -479,6 +624,9 @@ const FindUserDetails = props => {
                                 {
                                     setspinner(false)
                                 }
+                    } else
+                    {
+                        setspinner(false)
                     }
                         
 
@@ -496,15 +644,10 @@ const FindUserDetails = props => {
             const UserDetail = JSON.parse(result)
             Http.get('user/' + UserDetail.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } })
                 .then((response) => {
-
-                          
                     if (response.data.field_block_users.und) {
-                        
                         let scope = JSON.parse(response.data.field_block_users["und"][0]["value"])
                         scope.push(favInfo)
                         block(scope)
-    
-
                     } else {
                         console.log("value doesnt exist");
                         let scope = []
@@ -526,7 +669,9 @@ const FindUserDetails = props => {
         setspinner(true) 
         AsyncStorage.getItem('Token', (err, result) => {
             const UserDetail = JSON.parse(result)
+            console.log(UserDetail )
             const responseString = JSON.stringify(scope);
+            console.log(responseString)
             Http.put('user/' + UserDetail.data.user.uid, {
                 field_block_users: {
                     und: [
@@ -675,7 +820,7 @@ const FindUserDetails = props => {
                                 <View style={styles.fourthIconContainer}>
 
 
-                                <TouchableOpacity onPress={() => navigation.navigate('NewChat', {Name: name})}>
+                                <TouchableOpacity onPress={() => navigation.navigate('NewChat', {Name: name , Picture:Picture , uid:userId})}>
                                     <View style={styles.Iconview}>
                                             <Ionicons name="ios-chatbubbles" style={{ fontSize: 30 }} />
                                             <Text style={styles.TextBelowIcon}>Chat</Text>
@@ -748,7 +893,7 @@ const FindUserDetails = props => {
                                             ) : null}
                                             I want to meet <Text style={styles.Outputfont}>{meetValue} </Text></Text>
 
-                                        <Text style={styles.fourConatinerText}>My hobbies and interests are: <Text style={styles.Outputfont}>{activityValue} </Text></Text>
+                                        <Text style={styles.fourConatinerText}>My hobbies and interests are: <Text style={styles.Outputfont}>{activityValue} .</Text></Text>
                                     </View>
 
                                 </View>
@@ -792,7 +937,27 @@ const FindUserDetails = props => {
                                     <Text style={styles.fifthConatinerText}>I spend my days <Text style={styles.Outputfont}>{daysvalue} </Text></Text>
                                 ) : null}
 
-                                {AnythingelseStatus ? (
+                               {Nokid ?(
+                               <Text style={styles.fifthConatinerText}><Text style={styles.Outputfont}>I do not</Text> have children.</Text>  
+                                ):null}
+                                 {Yeskid ?(
+                               <Text style={styles.fifthConatinerText}><Text style={styles.Outputfont}>I have</Text> children.</Text>  
+                                ):null}
+
+
+                              {Pet ?(
+                               <Text style={styles.fifthConatinerText}>I have<Text style={styles.Outputfont}> one {petvalue}</Text></Text>  
+                                ):null}
+
+                          {PetParent ?(
+                              
+                         <Text style={styles.fifthConatinerText}><Text style={styles.Outputfont}>{children}</Text> children and have <Text style={styles.Outputfont}> One {petvalue}</Text></Text>  
+
+                          ):null}
+
+
+
+                                { AnythingelseStatus ? (
                                     <Text style={styles.fifthConatinerText}>Anything else <Text style={styles.Outputfont}>{anyThingvalue}</Text></Text>
                                 ) : null}
 
@@ -835,6 +1000,15 @@ const FindUserDetails = props => {
                                     </Text>
                                 </View>
                             ) : null}
+
+{music ? (
+                                <View style={styles.mainContainerTwoLiner}>
+                                    <Text style={styles.fourthContentContainerBold}>Favourite Music:
+                                        <Text style={styles.fifthConatinerOutputText}> {musicValue}</Text>
+                                    </Text>
+                                </View>
+                            ) : null}
+
                         </View>
                     </ScrollView>
 
@@ -862,12 +1036,17 @@ const FindUserDetails = props => {
 
                 <Overlay isVisible={alreadyFavVisisble} onBackdropPress={AlreadyFav}>
                     <>
-                        <Text style={styles.overLayText}>{message}</Text>
+                        <Text style={styles.overLayText}>Remove user from favorites?</Text>
 
-                        <View style={{justifyContent:"center"}}>
-                            <Button title="Ok" containerStyle={styles.buttoncontainerStyle} buttonStyle={styles.successButton} titleStyle={styles.tittleText} onPress={AlreadyFav} />
+                     
+                        <View style={styles.overLayButton}>
+                            <Button title="Confirm" containerStyle={styles.buttoncontainerStyle} buttonStyle={styles.successButton} titleStyle={styles.tittleText} onPress={removeFavorite} />
+                            <Button title="Cancel" containerStyle={styles.buttoncontainerStyle} buttonStyle={styles.redButton} titleStyle={styles.tittleText} onPress={AlreadyFav} />
 
                         </View>
+                        
+                            
+                    
                     </>
                 </Overlay>
 
