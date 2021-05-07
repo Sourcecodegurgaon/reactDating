@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/god/Documents/Git/donttoouch/reactDating New Eject/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-zh/values-zh.xml",
+            "outputFile": "/Users/god/Documents/Git/reactDating/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-zh/values-zh.xml",
             "map": [
                 {
                     "source": "/Users/god/.gradle/caches/transforms-2/files-2.1/9a16efa6490b19c50b104648e41814f5/jetified-stripe-android-8.1.0/res/values-zh/values-zh.xml",

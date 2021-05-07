@@ -35,7 +35,6 @@
     "ejs": "^3.1.5",
     "expo": "^38.0.0",
     "expo-asset": "~8.1.7",
-    "expo-barcode-scanner": "~8.2.1",
     "expo-camera": "~8.3.1",
     "expo-font": "~8.2.1",
     "expo-image-picker": "~8.3.0",
@@ -102,8 +101,9 @@
     "react-native-select-two": "^1.1.0",
     "react-native-tab-view": "^2.15.2",
     "react-native-textarea": "^1.0.4",
-    "react-native-unimodules": "~0.10.1",
+    "react-native-unimodules": "^0.10.1",
     "react-native-vector-icons": "^7.1.0",
+    "react-native-version-check": "^3.4.2",
     "react-native-view-overflow": "0.0.5",
     "react-native-web": "~0.11.7",
     "react-native-webview": "9.4.0",
@@ -119,8 +119,7 @@
     "react-select-box": "^3.0.1",
     "react-widgets": "^5.0.0-beta.22",
     "rn-expo-paypal-integration": "^1.2.0",
-    "rn-fetch-blob": "^0.12.0",
-    "unimodules-barcode-scanner-interface": "^5.2.1"
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

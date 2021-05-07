@@ -81,7 +81,7 @@ const SignIn = props => {
                     if (response.status == 200) {
                         AsyncStorage.setItem('Connected', JSON.stringify(response))
                         Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
-                          console.log(response.data.field_verfied.length )
+                          console.log(response.data.field_trial_period_start_date  )
                             if (response.data.field_trial_period_start_date.length == 0 && response.data.field_verfied.length != undefined) {
                                 setspinner(false)
                                 props.navigation.navigate('Becomeverified')
@@ -126,7 +126,7 @@ const SignIn = props => {
                 var msDiff = new Date().getTime() - new Date(LogoutToken.data.user.field_trial_period_start_date.und[0].value).getTime();    //Future date - current date
             }
             var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24));
-        console.log(LogoutToken.data.user.field_verfied)
+
           if(LogoutToken.data.user.field_verfied.length != undefined){
             if (daysTill30June2035 > 8) {
                 setspinner(false)

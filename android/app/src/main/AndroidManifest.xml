@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.not4dating.not4dating">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.not4dating.not4dating" xmlns:tools="http://schemas.android.com/tools">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
@@ -20,6 +20,10 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+<uses-permission android:name="com.android.vending.BILLING" />
+ <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
+
+
   <!-- Added permissions -->
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -51,4 +55,6 @@
   android:theme="@style/Base.Theme.AppCompat">
 </activity>
   </application>
+  
+
 </manifest>

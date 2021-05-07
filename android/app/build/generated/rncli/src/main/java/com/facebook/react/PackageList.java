@@ -53,6 +53,8 @@ import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 // react-native-vector-icons
 import com.oblador.vectoricons.VectorIconsPackage;
+// react-native-version-check
+import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 // react-native-view-overflow
 import com.entria.views.RNViewOverflowPackage;
 // react-native-webview
@@ -125,6 +127,7 @@ public class PackageList {
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
       new VectorIconsPackage(),
+      new RNVersionCheckPackage(),
       new RNViewOverflowPackage(),
       new RNCWebViewPackage(),
       new RNFetchBlobPackage()

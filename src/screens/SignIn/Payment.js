@@ -9,6 +9,7 @@ import { AsyncStorage } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Http from "../../Api/Http"
 import * as InAppPurchases from 'expo-in-app-purchases';
+//import { connectAsync, IAPRespoinseCode } from 'expo-in-app-purchases';
 
 
 const Payment = props => {
@@ -20,70 +21,51 @@ const Payment = props => {
         Montserrat_400Regular
     });
     useEffect(() => {
-        purchase()
-        checkSubscription()
+       
+        
 
 
     }, []);
-
+    
    
     const purchase = async () =>{
-        try {
-          await InAppBilling.open();
-          const details = await InAppBilling.purchase("android.test.purchased");
-          console.log("You purchased: ", details);
-        } catch (err) {
-          console.log(err);
-        } finally {
-          await InAppBilling.close();
-        }
+
+        const history = await InAppPurchases.connectAsync();
+
+        // if (history.responseCode === IAPResponseCode.OK) {
+        //     history.results.forEach(result => {
+        //         console.log(result)
+           // })
+        //}
+
+        // try {
+
+        //   await InAppBilling.open();
+        //   const details = await InAppBilling.purchase("android.test.purchased");
+        //   console.log("You purchased: ", details);
+        // } catch (err) {
+        //   console.log(err);
+        // } finally {
+        //   await InAppBilling.close();
+        // }
       }
       
-     const checkSubscription  = async() =>{
-          try {
-          await InAppBilling.open();
-          // If subscriptions/products are updated server-side you
-          // will have to update cache with loadOwnedPurchasesFromGoogle()
-          await InAppBilling.loadOwnedPurchasesFromGoogle();
-          const isSubscribed = await InAppBilling.isSubscribed("myapp.productId")
-          console.log("Customer subscribed: ", isSubscribed);
-        } catch (err) {
-          console.log(err);
-        } finally {
-          await InAppBilling.close();
-        }
-      }
+    //  const checkSubscription  = async() =>{
+    //       try {
+    //       await InAppBilling.open();
+    //       // If subscriptions/products are updated server-side you
+    //       // will have to update cache with loadOwnedPurchasesFromGoogle()
+    //       await InAppBilling.loadOwnedPurchasesFromGoogle();
+    //       const isSubscribed = await InAppBilling.isSubscribed("myapp.productId")
+    //       console.log("Customer subscribed: ", isSubscribed);
+    //     } catch (err) {
+    //       console.log(err);
+    //     } finally {
+    //       await InAppBilling.close();
+    //     }
+    //   }
 
-    const sevenDaysTrail = () =>{
-        AsyncStorage.getItem('Token', (err, result) => {
-            setspinner(true)
-            const UserDetail = JSON.parse(result)
-            const userId = UserDetail.data.user.uid
-            const newDate = new Date()
-       
-
-            Http.put('user/' + userId, {
-                field_verfied:   { 
-                    und: [
-                    {
-                      value: "true"
-                    }
-                  ]
-                }
-                
-            }, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
-                setspinner(false)
-               
-                props.navigation.navigate('FindFriends')
-        
-            })
-
-            setspinner(false)
-        })
-        setspinner(false)
-
-    
-      }
+ 
     if (!fontsLoaded) {
         return (<AppLoading />)
     }
@@ -107,10 +89,10 @@ const Payment = props => {
 
                     <View style={styles.mainContainerPicker}>
                         <Button
-                            onPress ={sevenDaysTrail}
+                            onPress={purchase}
                             containerStyle={{ marginHorizontal: 10, backgroundColor: "green", marginVertical: 8 }}
                             buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10 }}
-                            title="Click here for journey after successful payment"
+                            title="Subscribe"
                             titleStyle={{ fontFamily: 'Cairo_700Bold', fontSize: 18 }}
                         />
                     </View>

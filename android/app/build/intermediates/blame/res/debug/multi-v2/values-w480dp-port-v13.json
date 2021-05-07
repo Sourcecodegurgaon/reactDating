@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/god/Documents/Git/donttoouch/reactDating New Eject/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-w480dp-port-v13/values-w480dp-port-v13.xml",
+            "outputFile": "/Users/god/Documents/Git/reactDating/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-w480dp-port-v13/values-w480dp-port-v13.xml",
             "map": [
                 {
                     "source": "/Users/god/.gradle/caches/transforms-2/files-2.1/b1ba5de5eb8ae823640eb22cd3555da9/material-1.1.0/res/values-w480dp-port-v13/values-w480dp-port-v13.xml",
