@@ -10,32 +10,35 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import Http from "../../Api/Http"
 import * as InAppPurchases from 'expo-in-app-purchases';
 //import { connectAsync, IAPRespoinseCode } from 'expo-in-app-purchases';
+import { RadioButton } from 'react-native-paper';
 
 
 const Payment = props => {
     const [liveValue, setliveValue] = useState();
     const [spinner, setspinner] = useState(false)
+    const [value, setValue] = useState();
+
     let [fontsLoaded] = useFonts({
         Cairo_700Bold,
         Montserrat_200ExtraLight,
         Montserrat_400Regular
     });
     useEffect(() => {
-       
-        
+
+
 
 
     }, []);
-    
-   
-    const purchase = async () =>{
+
+
+    const purchase = async () => {
 
         const history = await InAppPurchases.connectAsync();
 
         // if (history.responseCode === IAPResponseCode.OK) {
         //     history.results.forEach(result => {
         //         console.log(result)
-           // })
+        // })
         //}
 
         // try {
@@ -48,8 +51,8 @@ const Payment = props => {
         // } finally {
         //   await InAppBilling.close();
         // }
-      }
-      
+    }
+
     //  const checkSubscription  = async() =>{
     //       try {
     //       await InAppBilling.open();
@@ -65,31 +68,43 @@ const Payment = props => {
     //     }
     //   }
 
- 
+
     if (!fontsLoaded) {
         return (<AppLoading />)
     }
     else {
         return (
-            
-
-            <View style={{ flex: 1, height: "100%", backgroundColor: "white", justifyContent: "center", paddingLeft: 2, paddingRight: 2 }}>
-   <Spinner
-                visible={spinner}
-                textContent={'Updating...'}
-                textStyle={styles.spinnerTextStyle}
-                overlayColor={"#000000c2"}
-            />
 
 
+            <View style={{ flex: 1, backgroundColor: "white", justifyContent: "center", paddingLeft: 2, paddingRight: 2 }}>
+                <Spinner
+                    visible={spinner}
+                    textContent={'Updating...'}
+                    textStyle={styles.spinnerTextStyle}
+                    overlayColor={"#000000c2"}
+                />
 
-                <View style={{ justifyContent: "center", alignItems: "center" }}>
 
-                    <Text style={styles.labelText}>This is where the payment gateway will come.</Text>
 
+                <View style={styles.mainContainerSubs}>
+
+                    <Text style={styles.labelText}>Choose Subscription:</Text>
+                    <View style={{height:50}}></View>
+                    <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
+                        <View style={styles.RadioStyling}>
+                            <Text style={{  fontFamily: 'Cairo_700Bold'}}>$4.99 USD - monthly</Text>
+                            <RadioButton value="Monthly" color="#056AAD"/>
+
+                        </View>
+                        <View style={styles.RadioStyling}>
+                            <Text style={{  fontFamily: 'Cairo_700Bold'}}>$19.99 USD - yearly</Text>
+                            <RadioButton value="Yearly" color="#056AAD" />
+                        </View>
+                    </RadioButton.Group>
+                    <View style={{height:50}}></View>
                     <View style={styles.mainContainerPicker}>
                         <Button
-                            onPress={purchase}
+                            onPress={() => props.navigation.navigate('Paymentreceipt', {Type:value})}
                             containerStyle={{ marginHorizontal: 10, backgroundColor: "green", marginVertical: 8 }}
                             buttonStyle={{ marginHorizontal: 10, backgroundColor: "green", borderRadius: 10 }}
                             title="Subscribe"
@@ -359,8 +374,18 @@ const styles = StyleSheet.create({
         marginHorizontal: 10
 
     },
-    spinnerTextStyle:{
-        color:"white"
+    spinnerTextStyle: {
+        color: "white"
+    },
+    RadioStyling: {
+        flexDirection: "row-reverse",
+        justifyContent: "flex-end",
+        alignItems: "center"
+    },
+    mainContainerSubs:{
+        marginLeft:20,
+        marginRight:20,
+        justifyContent: "flex-end",
     }
 
 });

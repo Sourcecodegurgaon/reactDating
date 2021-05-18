@@ -36,8 +36,18 @@ import Navigatetoscreen from './src/Navigation/NavigateToScreen'
 import NotFoundUser from "./src/screens/Welcome Screen/Components/NotFoundUser"
 import FindUserDetails from "./src/screens/Details/FindUserDetails"
 import Toutorial from "./src/screens/Chat/Toutorial"
-import PayPalExpressCheckOut from "./src/screens/Payment/PayPalExpressCheckOut";
-import Payment  from "./src/screens/SignIn/Payment"
+import Paymentreceipt from "./src/screens/Payment/Paymentreceipt";
+import Payment  from "./src/screens/SignIn/Payment";
+import MonthlySubConfirmation from "./src/screens/Payment/MonthlySubConfirmation"
+import CancelSubConfirmation from "./src/screens/Payment/CancelSubConfirmation"
+import FreezeSubConfirmation from "./src/screens/Payment/FreezeSubConfirmation"
+import YearlySubConfirmation from "./src/screens/Payment/YearlySubConfirmation"
+import Subscriptionexpired from "./src/screens/SignIn/Subscriptionexpired"
+import Subscriptionefreezed  from "./src/screens/SignIn/Subscriptionefreezed"
+import CloseAccountConfirm from "./src/screens/Payment/CloseAccountConfirm"
+import CancelledAccount  from "./src/screens/SignIn/CancelledAccount";
+
+
 const MyHeader = (navigation) => {
   return {
       header: props => <Navigationbar {...props} />,
@@ -61,7 +71,7 @@ const navigator = createStackNavigator(
     Moreinfo:Moreinfo,
     FindFriends:FindFriends,
     Forgotpassword:Forgotpassword,
-    Optionaldetail:Optionaldetail,
+    Optionaldetail:Optionaldetail, 
     Tophobbies:Tophobbies,
     SearchItems:SearchItems,
     Tabs:Tabs,
@@ -83,8 +93,16 @@ const navigator = createStackNavigator(
     NotFoundUser :NotFoundUser ,
     FindUserDetails:FindUserDetails,
     Toutorial:Toutorial,
-    PayPalExpressCheckOut:PayPalExpressCheckOut,
-    Payment:Payment
+    Paymentreceipt:Paymentreceipt,
+    Payment:Payment,
+    MonthlySubConfirmation:MonthlySubConfirmation,
+    CancelSubConfirmation:CancelSubConfirmation,
+    FreezeSubConfirmation:FreezeSubConfirmation,
+    YearlySubConfirmation:YearlySubConfirmation,
+    Subscriptionexpired:Subscriptionexpired,
+    Subscriptionefreezed:Subscriptionefreezed,
+    CloseAccountConfirm:CloseAccountConfirm,
+    CancelledAccount:CancelledAccount
   },
 
   {

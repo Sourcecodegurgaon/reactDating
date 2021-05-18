@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, View, TextInput,ActivityIndicator,Alert } from "react-native";
+import { Text, StyleSheet, View, TextInput, ActivityIndicator, Alert } from "react-native";
 import { Button } from 'react-native-elements';
 import { Input } from 'react-native-elements';
 import Http from '../../Api/Http'
@@ -12,7 +12,7 @@ import { Overlay } from 'react-native-elements';
 import Moment from 'moment';
 import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold } from '@expo-google-fonts/cairo';
-import { Montserrat_200ExtraLight,Montserrat_400Regular } from '@expo-google-fonts/montserrat';
+import { Montserrat_200ExtraLight, Montserrat_400Regular } from '@expo-google-fonts/montserrat';
 import { NativeModules } from 'react-native'
 import RCTNetworking from 'react-native/Libraries/Network/RCTNetworking'
 //var RCTNetworking = require(“RCTNetworking”);
@@ -26,7 +26,7 @@ const SignIn = props => {
     const toggleOverlay = () => {
         setVisible(!visible);
     };
-    
+
 
 
     //Spinner
@@ -39,7 +39,7 @@ const SignIn = props => {
 
 
     useEffect(() => {
-       
+
         RCTNetworking.clearCookies(() => { });
 
         setspinner(false)
@@ -70,10 +70,10 @@ const SignIn = props => {
         axios.post('http://gowebtutorial.com/api/json/user/login', { username: user, password: pass }, {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         }).then((response) => {
-            setspinner(false)
+            setspinner(true)
             AsyncStorage.setItem('Token', JSON.stringify(response))
-             AsyncStorage.getItem('Token', (err, result) => {
-              const LogoutToken = JSON.parse(result)
+            AsyncStorage.getItem('Token', (err, result) => {
+                const LogoutToken = JSON.parse(result)
                 //Connect Api
                 axios.post('http://gowebtutorial.com/api/json/system/connect', {}, {
                     headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token }
@@ -81,29 +81,88 @@ const SignIn = props => {
                     if (response.status == 200) {
                         AsyncStorage.setItem('Connected', JSON.stringify(response))
                         Http.get('user/' + LogoutToken.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': LogoutToken.data.sessid + "=" + LogoutToken.data.session_name, 'X-CSRF-Token': LogoutToken.data.token } }).then((response) => {
-                          console.log(response.data.field_trial_period_start_date  )
-                            if (response.data.field_trial_period_start_date.length == 0 && response.data.field_verfied.length != undefined) {
+
+                            
+                            //Closed Account Check
+                            if (response.data.field_useraccountclosed.length == undefined && response.data.field_useraccountclosed.und[0].value  == 'true') {
                                 setspinner(false)
-                                props.navigation.navigate('Becomeverified')
+                                props.navigation.navigate('CancelledAccount')
                                 
                             }
-                            else if (response.data.field_tutorial.und != undefined)
+
+                            else
+
                             {
-                              setspinner(false)
-                              props.navigation.navigate('FindFriends')
+
+                            
+                            if (response.data.field_freezeaccountdays.length == undefined && response.data.field_freezeaccount.und[0].value  == 'true') {
+                                setspinner(false)
+                                props.navigation.navigate('Subscriptionefreezed')
+                                
+                            }
+                            else
+                            {
+                            if (response.data.field_subcriptiontype.length == undefined) {
+
+                                var admission = Moment();
+                                var discharge = Moment(response.data.field_subscriptionenddate.und[0].value);
+                                //discharge.diff(admission, 'days');
+                                var date1 = new Date(discharge );
+                                var date2 = new Date(admission);
+                      
+                                // To calculate the time difference of two dates
+                                var Difference_In_Time =  date1.getTime() - date2.getTime();
+                                  
+                                // To calculate the no. of days between two dates
+                                var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+                    
+                      
+                  
+                                 if(Difference_In_Days > 1)
+                                 {
+                                    props.navigation.navigate('FindFriends')
+                                    setspinner(false)
+                                 }
+                                 else
+                                 {
+                                    props.navigation.navigate('Subscriptionexpired')
+                                    setspinner(false)
+                                 }
+
+
+
                             }
                             else {
-                                becomeCerified()
-                                setspinner(false)
-                                //props.navigation.navigate('FindFriends')
+
+                                if (response.data.field_trial_period_start_date.length == 0 && response.data.field_verfied.length != undefined) {
+
+                                    setspinner(false)
+                                    props.navigation.navigate('Becomeverified')
+                                    
+
+                                }
+                                else if (response.data.field_tutorial.und != undefined) {
+
+                                    setspinner(false)
+                                    props.navigation.navigate('FindFriends')
+                                }
+
+                                else {
+                                    becomeCerified()
+
+                                    //props.navigation.navigate('FindFriends')
+                                }
                             }
+
+                        }
+                    }
                         })
                     }
 
 
                 })
 
-             });
+            });
         }).catch(function (error) {
             setspinner(false)
             if (error.response.status) {
@@ -112,7 +171,7 @@ const SignIn = props => {
             }
         });
 
-    
+
     }
 
 
@@ -127,15 +186,17 @@ const SignIn = props => {
             }
             var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24));
 
-          if(LogoutToken.data.user.field_verfied.length != undefined){
-            if (daysTill30June2035 > 8) {
-                setspinner(false)
-                props.navigation.navigate('TrialOver')
+            if (LogoutToken.data.user.field_verfied.length != undefined) {
+                if (daysTill30June2035 > 8) {
+                
+                    props.navigation.navigate('TrialOver')
+                    setspinner(false)
+                }
             }
-        }
             else {
-                setspinner(false)
+          
                 props.navigation.navigate('FindFriends')
+                setspinner(false)
             }
 
 
@@ -233,7 +294,7 @@ const styles = StyleSheet.create({
     },
     spinnerTextStyle: {
         color: 'white',
-     
+
     },
     labelText: {
         marginHorizontal: 10,

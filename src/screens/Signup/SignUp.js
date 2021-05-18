@@ -2014,7 +2014,7 @@ const SignUp = props => {
              
     
             }).catch((error) => {
-    
+
                     if (error.response.status) {
                         console.log(error.response.data.form_errors);
                         console.log(error.response.data);

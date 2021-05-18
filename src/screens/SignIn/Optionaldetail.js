@@ -2004,7 +2004,6 @@ const Optionaldetail = (props) => {
             Montserrat_400Regular
         });  
 
-        console.log(firstItems.activityValue)
     
 
   

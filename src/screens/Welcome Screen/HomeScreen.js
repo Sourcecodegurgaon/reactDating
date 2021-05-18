@@ -11,48 +11,85 @@ import { AppLoading } from 'expo';
 import { useFonts, Cairo_700Bold } from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight } from '@expo-google-fonts/montserrat';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import Moment from 'moment';
 const HomeScreen = props => {
   const [spinner, setspinner] = useState(false)
   let [fontsLoaded] = useFonts({
     Cairo_700Bold,
     Montserrat_200ExtraLight
   });
- 
+
   useEffect(() => {
 
-    props.navigation.addListener('didFocus', () => {        
-      UserCheck()               
-  });
-  
+    props.navigation.addListener('didFocus', () => {
+      UserCheck()
+    });
+
 
   }, [])
 
-const UserCheck = () =>{
-  AsyncStorage.getItem('Token', (err, result) => {
-    const UserDetail = JSON.parse(result)
+  const UserCheck = () => {
 
-    if (UserDetail != null) {
-      setspinner(true)
-      Http.get('user/' + UserDetail.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
+    AsyncStorage.getItem('Token', (err, result) => {
+      const UserDetail = JSON.parse(result)
 
-        if (response.data.field_already_declared.und == undefined) {
-          setspinner(false)
-          props.navigation.navigate('Tophobbies')
+      if (UserDetail != null) {
+        setspinner(true)
+        Http.get('user/' + UserDetail.data.user.uid, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
+     //Closed Account Check
+     if (response.data.field_useraccountclosed.length == undefined && response.data.field_useraccountclosed.und[0].value  == 'true') {
+      setspinner(false)
+      props.navigation.navigate('CancelledAccount')
+      
+  }
+
+  else
+
+  {
+          if (response.data.field_freezeaccountdays.length == undefined && response.data.field_freezeaccount.und[0].value == 'true') {
+            setspinner(false)
+            props.navigation.navigate('Subscriptionefreezed')
+
+          }
+          else {
+            if (response.data.field_subcriptiontype.length == undefined) {
+
+              var admission = Moment();
+              var discharge = Moment(response.data.field_subscriptionenddate.und[0].value);
+              discharge.diff(admission, 'days');
+
+              if (discharge.diff(admission, 'days') > 1) {
+                props.navigation.navigate('FindFriends')
+                setspinner(false)
+              }
+              else {
+                props.navigation.navigate('Subscriptionexpired')
+                setspinner(false)
+              }
+
+            }
+            else {
+
+              if (response.data.field_already_declared.und == undefined) {
+                setspinner(false)
+                props.navigation.navigate('Tophobbies')
+              }
+              else if (response.data.field_tutorial.und != undefined) {
+                setspinner(false)
+                props.navigation.navigate('FindFriends')
+              }
+              else {
+                setspinner(false)
+                props.navigation.navigate('TrialOver', { userUpated: "false" })
+              }
+            }
+          }
+
         }
-        else if (response.data.field_tutorial.und != undefined)
-        {
-          setspinner(false)
-          props.navigation.navigate('FindFriends')
-        }
-        else {
-          setspinner(false)
-          props.navigation.navigate('TrialOver',{userUpated: "false"})
-        }
-      })
-    }
-  })
-}
+        })
+      }
+    })
+  }
   if (!fontsLoaded) {
     return (<AppLoading />)
   }
@@ -62,12 +99,12 @@ const UserCheck = () =>{
 
 
       <View style={styles.mainTextContainer}>
- <Spinner
-                    visible={spinner}
-                    textContent={'Loading...'}
-                    textStyle={styles.spinnerTextStyle}
-                    overlayColor={"#000000c4"}
-                />
+        <Spinner
+          visible={spinner}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+          overlayColor={"#000000c4"}
+        />
 
 
         <View style={styles.mainTextContainerTwo}>
@@ -117,7 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginHorizontal: 15,
     fontFamily: "Montserrat_200ExtraLight",
-     color:"#000000"
+    color: "#000000"
 
 
 
@@ -127,7 +164,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     fontSize: 19,
     fontFamily: "Montserrat_200ExtraLight",
-    color:"#000000"
+    color: "#000000"
 
 
   },
@@ -138,7 +175,7 @@ const styles = StyleSheet.create({
     color: "green",
     fontSize: 18,
     fontFamily: "Cairo_700Bold",
-    
+
 
 
   },
@@ -147,10 +184,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     paddingVertical: 30,
-    paddingHorizontal:15
+    paddingHorizontal: 15
   },
-  spinnerTextStyle:{
-    color:"white"
+  spinnerTextStyle: {
+    color: "white"
   }
 
 });

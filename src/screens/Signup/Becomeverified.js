@@ -69,13 +69,13 @@ const Becomeverified = (props) => {
                         }
                     ]
                 },
-                // field_verfied:   { 
-                //     und: [
-                //     {
-                //       value: "true"
-                //     }
-                //   ]
-                // }
+                field_verfied:   { 
+                    und: [
+                    {
+                      value: "true"
+                    }
+                  ]
+                }
                 
             }, { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Cookie': UserDetail.data.sessid + "=" + UserDetail.data.session_name, 'X-CSRF-Token': UserDetail.data.token } }).then((response) => {
                 setspinner(false)

@@ -41,10 +41,6 @@ import fr.snapp.imagebase64.RNImgToBase64Package;
 import com.imagepicker.ImagePickerPackage;
 // react-native-paypal
 import com.smarkets.paypal.RNPaypalPackage;
-// react-native-paypal-gateway
-import com.taessina.paypal.RNPaypalWrapperPackage;
-// react-native-paypal-wrapper
-import com.taessina.paypal.RNPaypalWrapperPackage;
 // react-native-reanimated
 import com.swmansion.reanimated.ReanimatedPackage;
 // react-native-safe-area-context
@@ -121,8 +117,6 @@ public class PackageList {
       new RNImgToBase64Package(),
       new ImagePickerPackage(),
       new RNPaypalPackage(),
-      new RNPaypalWrapperPackage(),
-      new RNPaypalWrapperPackage(),
       new ReanimatedPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),

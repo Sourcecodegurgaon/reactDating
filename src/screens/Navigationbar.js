@@ -15,18 +15,25 @@ import { useFonts, Cairo_700Bold} from '@expo-google-fonts/cairo';
 import { Montserrat_200ExtraLight} from '@expo-google-fonts/montserrat';
 const Navigationbar = (props) => {
   const [toutorial,settoturial] = useState(true)
+  const [notCancelled, setCancelled] = useState(true)
+  const [Login, setLogin] = useState(false)
   useEffect(() => {
 
     if  (props.navigation.state.routeName == "Toutorial")
     {
       settoturial(false)
     }
+    if(props.navigation.state.routeName == "CancelledAccount")
+    {
+       setCancelled(false)
+    }
+
   })
 const  rightImage = () =>{
   const [refreshing, setRefreshing] = useState(true);
 const [visible, setVisible] = useState(false);
 const [spinner ,setspinner] = useState(false); 
-const [Login, setLogin] = useState(false)
+
 const [helpChat, setHelpChat] = useState(false)
 
 const toggleOverlay = () => {
@@ -134,15 +141,18 @@ return (
       <Image style={styles.Image} source={require('../../assets/Images/question.png')} />
       </TouchableOpacity>
       <>
+     { notCancelled ?(
       <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
           <View style={styles.overlaystyling}>
+              
               <Button title="View/Edit Profile" buttonStyle={styles.buttonHeight} titleStyle={styles.titleStyles} onPress={ViewEdit } containerStyle={styles.Buttoncontainer} />
+        
               <Button title="Account Settings" buttonStyle={styles.buttonHeight} titleStyle={styles.titleStyles} onPress={AccountSetting} containerStyle={styles.Buttoncontainer}/>
               {/* <Button title="Blocked Users" buttonStyle={styles.buttonHeight} titleStyle={styles.titleStyles} onPress={ViewBlockUser}/> */}
               <Text style={styles.titleStyles} onPress={LogOut}>Log Out</Text>
           </View>
       </Overlay>
- 
+ ):null}
 
 
       <Overlay isVisible={helpChat} onBackdropPress={toggleHelpchat}>
