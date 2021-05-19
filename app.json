@@ -23,12 +23,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.not4dating.not4dating",
-      "buildNumber": "1.0.0"
+      "supportsTablet": true
     },
-
-   
     "android": {
       "adaptiveIcon":{
         "foregroundImage":"./assets/adaptive-icon.png",

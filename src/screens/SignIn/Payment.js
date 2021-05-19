@@ -8,7 +8,6 @@ import { Button } from 'react-native-elements';
 import { AsyncStorage } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Http from "../../Api/Http"
-import * as InAppPurchases from 'expo-in-app-purchases';
 //import { connectAsync, IAPRespoinseCode } from 'expo-in-app-purchases';
 import { RadioButton } from 'react-native-paper';
 
@@ -33,7 +32,7 @@ const Payment = props => {
 
     const purchase = async () => {
 
-        const history = await InAppPurchases.connectAsync();
+        //const history = await InAppPurchases.connectAsync();
 
         // if (history.responseCode === IAPResponseCode.OK) {
         //     history.results.forEach(result => {

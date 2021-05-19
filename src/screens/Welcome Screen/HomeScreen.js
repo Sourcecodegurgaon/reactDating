@@ -80,7 +80,7 @@ const HomeScreen = props => {
               }
               else {
                 setspinner(false)
-                props.navigation.navigate('TrialOver', { userUpated: "false" })
+                props.navigation.navigate('Becomeverified', { userUpated: "false" })
               }
             }
           }
